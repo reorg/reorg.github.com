@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
+<title>pg_repack -- Reorganize tables in PostgreSQL databases without any locks</title>
+<style type="text/css">
+
+body {
+	font-family:
+		Lucida Grande, Verdana, Arial, Helvetica,
+		'メイリオ',
+		'Meiryo',
+		'ヒラギノ角ゴ Pro W3',
+		'Hiragino Kaku Gothic Pro',
+		'Osaka',
+		'ＭＳ Ｐゴシック',
+		sans-serif;
+	color: #202020;
+}
+
+h2, h3, h4, h5, h6 {
+    color: Black;
+    background: none;
+    padding-top: 0.5em;
+    padding-bottom: 0.17em;
+    border-bottom: 1px solid #aaaaaa;
+}
+H1 { font-size: x-large; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H2 { font-size: large; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H3 { padding-left: 1em; font-size: medium; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H4 { padding-left: 2em; font-size: small; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H5 { padding-left: 3em; font-size: x-small; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H6 { padding-left: 4em; font-size: xx-small; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+
+pre {
+	font-family: courier,sans-serif;
+	background-color: #FBFBFD;
+	border: 1px dashed #7E7ECB;
+	color: black;
+	line-height: 1.1em; padding: 0.5em;
+	overflow: auto;
+}
+
+li {
+	line-height: 1.4em;
+}
+
+div.contents {
+	float:right;
+	border:thin solid black;
+	background-color: white;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	padding-left: 1em;
+	padding-right: 1em;
+	margin-left: 0.5em;
+	margin-top: 2.5em !important;
+}
+
+
+
+</style>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="pg-repack-reorganize-tables-in-postgresql-databases-without-any-locks">
+<h1 class="title">pg_repack -- Reorganize tables in PostgreSQL databases without any locks</h1>
+
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#synopsis" id="id2">Synopsis</a></li>
+<li><a class="reference internal" href="#description" id="id3">Description</a></li>
+<li><a class="reference internal" href="#examples" id="id4">Examples</a></li>
+<li><a class="reference internal" href="#options" id="id5">Options</a></li>
+<li><a class="reference internal" href="#environment" id="id6">Environment</a></li>
+<li><a class="reference internal" href="#diagnostics" id="id7">Diagnostics</a></li>
+<li><a class="reference internal" href="#restrictions" id="id8">Restrictions</a></li>
+<li><a class="reference internal" href="#details" id="id9">Details</a></li>
+<li><a class="reference internal" href="#installations" id="id10">Installations</a></li>
+<li><a class="reference internal" href="#requirements" id="id11">Requirements</a></li>
+<li><a class="reference internal" href="#releases" id="id12">Releases</a></li>
+<li><a class="reference internal" href="#see-also" id="id13">See Also</a></li>
+</ul>
+</div>
+<div class="section" id="synopsis">
+<h2>Synopsis</h2>
+<pre class="literal-block">
+pg_repack [OPTION]... [DBNAME]
+</pre>
+<p>The following options can be specified in <tt class="docutils literal">OPTIONS</tt>. See also <a class="reference internal" href="#options">Options</a> for
+details.</p>
+<dl class="docutils">
+<dt>Options:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-a</span>, <span class="option">--all</span></kbd></td>
+<td>repack all databases</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span>, <span class="option">--no-order</span></kbd></td>
+<td>do vacuum full instead of cluster</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-o</span>, <span class="option">--order-by=<var>COLUMNS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>order by columns instead of cluster keys</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-t</span>, <span class="option">--table=<var>TABLE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>repack specific table only</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-T</span>, <span class="option">--wait-timeout=<var>SECS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>timeout to cancel other backends on conflict</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-Z</span>, <span class="option">--no-analyze</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>don't analyze at end</td></tr>
+</tbody>
+</table>
+</dd>
+<dt>Connection options:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-d</span>, <span class="option">--dbname=<var>DBNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>database to connect</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-h</span>, <span class="option">--host=<var>HOSTNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>database server host or socket directory</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-p</span>, <span class="option">--port=<var>PORT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>database server port</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-U</span>, <span class="option">--username=<var>USERNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>user name to connect as</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-w</span>, <span class="option">--no-password</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>never prompt for password</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-W</span>, <span class="option">--password</span></kbd></td>
+<td>force password prompt</td></tr>
+</tbody>
+</table>
+</dd>
+<dt>Generic options:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-e</span>, <span class="option">--echo</span></kbd></td>
+<td>echo queries</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-E</span>, <span class="option">--elevel=<var>LEVEL</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>set output message level</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--help</span></kbd></td>
+<td>show this help, then exit</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--version</span></kbd></td>
+<td>output version information, then exit</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>pg_repack is an utility program to reorganize tables in PostgreSQL databases.
+Unlike <a class="reference external" href="http://www.postgresql.org/docs/current/static/app-clusterdb.html">clusterdb</a>, it doesn't block any selections and updates during
+reorganization.</p>
+<p>pg_repack is a fork of the previous <a class="reference external" href="http://reorg.projects.pgfoundry.org/">pg_reorg</a> project. It was founded to
+gather the bug fixes and new development ideas that the slow pace of
+development of pg_reorg was struggling to satisfy.</p>
+<p>You can choose one of the following methods to reorganize:</p>
+<ul class="simple">
+<li>Online CLUSTER (ordered by cluster index)</li>
+<li>Ordered by specified columns</li>
+<li>Online VACUUM FULL (packing rows only)</li>
+</ul>
+<p>NOTICE:</p>
+<ul class="simple">
+<li>Only superusers can use the utility.</li>
+<li>Target table must have PRIMARY KEY.</li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<p>Execute the following command to perform an online CLUSTER of all tables in
+test database:</p>
+<pre class="literal-block">
+$ pg_repack test
+</pre>
+<p>Execute the following command to perform an online VACUUM FULL to foo table in
+test database:</p>
+<pre class="literal-block">
+$ pg_repack --no-order --table foo -d test
+</pre>
+</div>
+<div class="section" id="options">
+<h2>Options</h2>
+<p>pg_repack has the following command line options:</p>
+<div class="section" id="reorg-options">
+<h3>Reorg Options</h3>
+<p>Options to order rows. If not specified, pg_repack performs an online CLUSTER
+using cluster indexes. Only one option can be specified. You may also specify
+target tables or databases.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
+<dd>Do online VACUUM FULL.</dd>
+<dt><tt class="docutils literal"><span class="pre">-o</span> COLUMNS <span class="pre">[,...]</span></tt>, <tt class="docutils literal"><span class="pre">--order-by=COLUMNS</span> <span class="pre">[,...]</span></tt></dt>
+<dd>Do online CLUSTER ordered by specified columns.</dd>
+<dt><tt class="docutils literal"><span class="pre">-t</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--table=TABLE</span></tt></dt>
+<dd>Reorganize table only. If you don't specify this option, all tables in
+specified databases are reorganized.</dd>
+<dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
+<dd>pg_repack needs to take an exclusive lock at the end of the
+reorganization.  This setting controls how long it wait for acquiring the
+lock in seconds. If the lock cannot be taken even after the duration,
+pg_repack forces to cancel conflicted queries. Also, if the server version
+is 8.4 or newer, pg_repack forces to disconnect conflicted backends after
+twice time passed. The default is 60 seconds.</dd>
+<dt><tt class="docutils literal"><span class="pre">-Z</span></tt>, <tt class="docutils literal"><span class="pre">--no-analyze</span></tt></dt>
+<dd>Disable ANALYZE after the reorganization. If not specified, run ANALYZE
+after the reorganization.</dd>
+</dl>
+</div>
+<div class="section" id="connection-options">
+<h3>Connection Options</h3>
+<p>Options to connect to servers. You cannot use <tt class="docutils literal"><span class="pre">--all</span></tt> and <tt class="docutils literal"><span class="pre">--dbname</span></tt> or
+<tt class="docutils literal"><span class="pre">--table</span></tt> together.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">--all</span></tt></dt>
+<dd>Reorganize all databases.</dd>
+<dt><tt class="docutils literal"><span class="pre">-d</span> DBNAME</tt>, <tt class="docutils literal"><span class="pre">--dbname=DBNAME</span></tt></dt>
+<dd>Specifies the name of the database to be reorganized. If this is not
+specified and <tt class="docutils literal"><span class="pre">-a</span></tt> (or <tt class="docutils literal"><span class="pre">--all</span></tt>) is not used, the database name is read
+from the environment variable PGDATABASE. If that is not set, the user
+name specified for the connection is used.</dd>
+<dt><tt class="docutils literal"><span class="pre">-h</span> HOSTNAME</tt>, <tt class="docutils literal"><span class="pre">--host=HOSTNAME</span></tt></dt>
+<dd>Specifies the host name of the machine on which the server is running. If
+the value begins with a slash, it is used as the directory for the Unix
+domain socket.</dd>
+<dt><tt class="docutils literal"><span class="pre">-p</span> PORT</tt>, <tt class="docutils literal"><span class="pre">--port=PORT</span></tt></dt>
+<dd>Specifies the TCP port or local Unix domain socket file extension on which
+the server is listening for connections.</dd>
+<dt><tt class="docutils literal"><span class="pre">-U</span> USERNAME</tt>, <tt class="docutils literal"><span class="pre">--username=USERNAME</span></tt></dt>
+<dd>User name to connect as.</dd>
+<dt><tt class="docutils literal"><span class="pre">-w</span></tt>, <tt class="docutils literal"><span class="pre">--no-password</span></tt></dt>
+<dd>Never issue a password prompt. If the server requires password
+authentication and a password is not available by other means such as a
+.pgpass file, the connection attempt will fail. This option can be useful
+in batch jobs and scripts where no user is present to enter a password.</dd>
+<dt><tt class="docutils literal"><span class="pre">-W</span></tt>, <tt class="docutils literal"><span class="pre">--password</span></tt></dt>
+<dd><p class="first">Force the program to prompt for a password before connecting to a
+database.</p>
+<p class="last">This option is never essential, since the program will automatically
+prompt for a password if the server demands password authentication.
+However, pg_repack will waste a connection attempt finding out that the
+server wants a password. In some cases it is worth typing <tt class="docutils literal"><span class="pre">-W</span></tt> to avoid
+the extra connection attempt.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="generic-options">
+<h3>Generic Options</h3>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-e</span></tt>, <tt class="docutils literal"><span class="pre">--echo</span></tt></dt>
+<dd>Echo commands sent to server.</dd>
+<dt><tt class="docutils literal"><span class="pre">-E</span> LEVEL</tt>, <tt class="docutils literal"><span class="pre">--elevel=LEVEL</span></tt></dt>
+<dd>Choose the output message level from <tt class="docutils literal">DEBUG</tt>, <tt class="docutils literal">INFO</tt>, <tt class="docutils literal">NOTICE</tt>,
+<tt class="docutils literal">WARNING</tt>, <tt class="docutils literal">ERROR</tt>, <tt class="docutils literal">LOG</tt>, <tt class="docutils literal">FATAL</tt>, and <tt class="docutils literal">PANIC</tt>. The default is
+<tt class="docutils literal">INFO</tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">--help</span></tt></dt>
+<dd>Show usage of the program.</dd>
+<dt><tt class="docutils literal"><span class="pre">--version</span></tt></dt>
+<dd>Show the version number of the program.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="environment">
+<h2>Environment</h2>
+<dl class="docutils">
+<dt><tt class="docutils literal">PGDATABASE</tt>, <tt class="docutils literal">PGHOST</tt>, <tt class="docutils literal">PGPORT</tt>, <tt class="docutils literal">PGUSER</tt></dt>
+<dd><p class="first">Default connection parameters</p>
+<p class="last">This utility, like most other PostgreSQL utilities, also uses the
+environment variables supported by libpq (see <a class="reference external" href="http://www.postgresql.org/docs/current/static/libpq-envars.html">Environment Variables</a>).</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="diagnostics">
+<h2>Diagnostics</h2>
+<p>Error messages are reported when pg_repack fails. The following list shows the
+cause of errors.</p>
+<p>You need to cleanup by hand after fatal errors. To cleanup, execute
+<tt class="docutils literal">$PGHOME/share/contrib/uninstall_pg_repack.sql</tt> to the database where the
+error occured and then execute <tt class="docutils literal">$PGHOME/share/contrib/pg_repack.sql</tt>. (Do
+uninstall and reinstall.)</p>
+<dl class="docutils">
+<dt>pg_repack: repack database &quot;template1&quot; ... skipped</dt>
+<dd><p class="first">pg_repack is not installed in the database when <tt class="docutils literal"><span class="pre">--all</span></tt> option is
+specified.</p>
+<p class="last">Do register pg_repack to the database.</p>
+</dd>
+<dt>ERROR: pg_repack is not installed</dt>
+<dd><p class="first">pg_repack is not installed in the database specified by <tt class="docutils literal"><span class="pre">--dbname</span></tt>.</p>
+<p class="last">Do register pg_repack to the database.</p>
+</dd>
+<dt>ERROR: relation &quot;table&quot; has no primary key</dt>
+<dd><p class="first">The target table doesn't have PRIMARY KEY.</p>
+<p class="last">Define PRIMARY KEY to the table. (ALTER TABLE ADD PRIMARY KEY)</p>
+</dd>
+<dt>ERROR: relation &quot;table&quot; has no cluster key</dt>
+<dd><p class="first">The target table doesn't have CLUSTER KEY.</p>
+<p class="last">Define CLUSTER KEY to the table. (ALTER TABLE CLUSTER)</p>
+</dd>
+<dt>pg_repack: query failed: ERROR: column &quot;col&quot; does not exist</dt>
+<dd><p class="first">The target table doesn't have columns specified by <tt class="docutils literal"><span class="pre">--order-by</span></tt> option.</p>
+<p class="last">Specify existing columns.</p>
+</dd>
+<dt>ERROR: permission denied for schema repack</dt>
+<dd><p class="first">Permission error.</p>
+<p class="last">pg_repack must be executed by superusers.</p>
+</dd>
+<dt>pg_repack: query failed: ERROR: trigger &quot;z_repack_trigger&quot; for relation &quot;tbl&quot; already exists</dt>
+<dd><p class="first">The target table already has a trigger named <tt class="docutils literal">z_repack_trigger</tt>.</p>
+<p class="last">Delete or rename the trigger.</p>
+</dd>
+<dt>pg_repack: trigger conflicted for tbl</dt>
+<dd><p class="first">The target table already has a trigger which follows by
+<tt class="docutils literal">z_repack_trigger</tt> in alphabetical order.</p>
+<p class="last">Delete or rename the trigger.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="restrictions">
+<h2>Restrictions</h2>
+<p>pg_repack has the following restrictions. Be careful to avoid data
+corruptions.</p>
+<div class="section" id="temp-tables">
+<h3>Temp tables</h3>
+<p>pg_repack cannot reorganize temp tables.</p>
+</div>
+<div class="section" id="gist-indexes">
+<h3>GiST indexes</h3>
+<p>pg_repack cannot reorganize tables using GiST indexes.</p>
+</div>
+<div class="section" id="ddl-commands">
+<h3>DDL commands</h3>
+<p>You cannot do DDL commands <strong>except</strong> VACUUM and ANALYZE during pg_repack. In many
+cases pg_repack will fail and rollback collectly, but there are some cases
+which may result in data-corruption .</p>
+<dl class="docutils">
+<dt>TRUNCATE</dt>
+<dd>TRUNCATE is lost. Deleted rows still exist after pg_repack.</dd>
+<dt>CREATE INDEX</dt>
+<dd>It causes index corruptions.</dd>
+<dt>ALTER TABLE ... ADD COLUMN</dt>
+<dd>It causes lost of data. Newly added columns are initialized with NULLs.</dd>
+<dt>ALTER TABLE ... ALTER COLUMN TYPE</dt>
+<dd>It causes data corruptions.</dd>
+<dt>ALTER TABLE ... SET TABLESPACE</dt>
+<dd>It causes data corruptions by wrong relfilenode.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="details">
+<h2>Details</h2>
+<p>pg_repack creates a work table in the repack schema and sorts the rows in this
+table. Then, it updates the system catalogs directly to swap the work table
+and the original one.</p>
+</div>
+<div class="section" id="installations">
+<h2>Installations</h2>
+<p>pg_repack can be built with &quot;make&quot; on UNIX or Linux. pgxs build framework is
+used automatically. Before building, you might need to install postgres
+packages for developer (postgresql-devel, etc.) and add <tt class="docutils literal">pg_config</tt> to your
+<tt class="docutils literal">$PATH</tt>.</p>
+<pre class="literal-block">
+$ cd pg_repack
+$ make
+$ su
+$ make install
+</pre>
+<p>You can also use Microsoft Visual C++ 2010 to build the program on Windows.
+There are project files in the <tt class="docutils literal">msvc</tt> folder.</p>
+<p>Start PostgreSQL and execute the script to register functions to your
+database:</p>
+<pre class="literal-block">
+$ pg_ctl start
+$ psql -c &quot;CREATE EXTENSION pg_repack&quot; -d your_database
+</pre>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements</h2>
+<dl class="docutils">
+<dt>PostgreSQL versions</dt>
+<dd>PostgreSQL 8.2, 8.3, 8.4, 9.0, 9.1, 9.2</dd>
+<dt>OS</dt>
+<dd>RHEL 5.2, Windows XP SP3</dd>
+<dt>Disks</dt>
+<dd>Requires free disk space twice as large as the target table(s) and
+indexes. For example, if the total size of the tables and indexes to be
+reorganized is 1GB, an additional 2GB of disk space is required.</dd>
+</dl>
+</div>
+<div class="section" id="releases">
+<h2>Releases</h2>
+<ul class="simple">
+<li>pg_repack 1.1.8<ul>
+<li>Added support for PostgreSQL 9.2.</li>
+<li>Added support for CREATE EXTENSION on PostgreSQL 9.1 and following.</li>
+<li>Give user feedback while waiting for transactions to finish  (pg_reorg
+issue #5).</li>
+<li>Bugfix: Allow running on newly promoted streaming replication slaves
+(pg_reorg issue #1).</li>
+<li>Bugfix: Properly escape column names (pg_reorg issue #6).</li>
+<li>Bugfix: Avoid recreating invalid indexes, or choosing them as key
+(pg_reorg issue #9).</li>
+</ul>
+</li>
+<li>pg_reorg 1.1.7 (2011-08-07)<ul>
+<li>Bugfix: VIEWs and FUNCTIONs could be corrupted that used a reorganized
+table which has a dropped column.</li>
+<li>Supports PostgreSQL 9.1 and 9.2dev. (but EXTENSION is not yet)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="see-also">
+<h2>See Also</h2>
+<blockquote>
+<ul class="simple">
+<li><a class="reference external" href="http://www.postgresql.org/docs/current/static/app-clusterdb.html">clusterdb</a></li>
+<li><a class="reference external" href="http://www.postgresql.org/docs/current/static/app-vacuumdb.html">vacuumdb</a></li>
+</ul>
+</blockquote>
+</div>
+</div>
+</body>
+</html>
