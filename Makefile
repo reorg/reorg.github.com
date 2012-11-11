@@ -4,16 +4,12 @@ REPACK_DIR=../pg_repack/doc
 RSTCSS = $(shell python -c 'import docutils.writers.html4css1 as m; print m.Writer.default_stylesheet_path')
 RSTOPTS = --stylesheet-path=$(REPACK_DIR)/style.css,$(RSTCSS) --initial-header-level=2
 
-HTML = index.html
-
-.PHONY: clean
+HTML = pg_repack/index.html
 
 all: html
 
 html: $(HTML)
 
-index.html: $(REPACK_DIR)/pg_repack.rst $(REPACK_DIR)/style.css
+pg_repack/index.html: $(REPACK_DIR)/pg_repack.rst $(REPACK_DIR)/style.css
+	mkdir -p pg_repack
 	rst2html $(RSTOPTS) $< $@
-
-clean:
-	rm -f $(HTML)
