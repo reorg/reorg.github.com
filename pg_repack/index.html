@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
-<title>pg_repack -- Reorganize tables in PostgreSQL databases without any locks</title>
+<title>pg_repack -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 body {
@@ -59,7 +59,9 @@ div.contents {
 	margin-top: 2.5em !important;
 }
 
-
+div.contents ul {
+	padding-left: 1em;
+}
 
 </style>
 <style type="text/css">
@@ -367,8 +369,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-reorganize-tables-in-postgresql-databases-without-any-locks">
-<h1 class="title">pg_repack -- Reorganize tables in PostgreSQL databases without any locks</h1>
+<div class="document" id="pg-repack-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
@@ -385,9 +387,12 @@ ul.auto-toc {
 <li><a class="reference internal" href="#see-also" id="id11">See Also</a></li>
 </ul>
 </div>
-<p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> is an utility program to reorganize tables in PostgreSQL databases.
-Unlike <a class="reference external" href="http://www.postgresql.org/docs/current/static/app-clusterdb.html">clusterdb</a>, it doesn't block any selections and updates during
-reorganization.</p>
+<p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> is a PostgreSQL extension which lets you remove bloat from
+tables and indexes, and optionally restore the physical order of clustered
+indexes. Unlike <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-cluster.html">CLUSTER</a> and <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-vacuum.html">VACUUM FULL</a> it works online, without
+holding an exclusive lock on the processed tables during processing.
+pg_repack is efficient to boot, with performance comparable to using
+CLUSTER directly.</p>
 <p>pg_repack is a fork of the previous <a class="reference external" href="http://reorg.projects.pgfoundry.org/">pg_reorg</a> project. Please check the
 <a class="reference external" href="https://github.com/reorg/pg_repack">project page</a> for bug report and development information.</p>
 <p>You can choose one of the following methods to reorganize:</p>
