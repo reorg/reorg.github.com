@@ -375,16 +375,17 @@ ul.auto-toc {
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#requirements" id="id2">Requirements</a></li>
-<li><a class="reference internal" href="#installation" id="id3">Installation</a></li>
-<li><a class="reference internal" href="#usage" id="id4">Usage</a></li>
-<li><a class="reference internal" href="#environment" id="id5">Environment</a></li>
-<li><a class="reference internal" href="#examples" id="id6">Examples</a></li>
-<li><a class="reference internal" href="#diagnostics" id="id7">Diagnostics</a></li>
-<li><a class="reference internal" href="#restrictions" id="id8">Restrictions</a></li>
-<li><a class="reference internal" href="#details" id="id9">Details</a></li>
-<li><a class="reference internal" href="#releases" id="id10">Releases</a></li>
-<li><a class="reference internal" href="#see-also" id="id11">See Also</a></li>
+<li><a class="reference internal" href="#requirements" id="id4">Requirements</a></li>
+<li><a class="reference internal" href="#download" id="id5">Download</a></li>
+<li><a class="reference internal" href="#installation" id="id6">Installation</a></li>
+<li><a class="reference internal" href="#usage" id="id7">Usage</a></li>
+<li><a class="reference internal" href="#environment" id="id8">Environment</a></li>
+<li><a class="reference internal" href="#examples" id="id9">Examples</a></li>
+<li><a class="reference internal" href="#diagnostics" id="id10">Diagnostics</a></li>
+<li><a class="reference internal" href="#restrictions" id="id11">Restrictions</a></li>
+<li><a class="reference internal" href="#details" id="id12">Details</a></li>
+<li><a class="reference internal" href="#releases" id="id13">Releases</a></li>
+<li><a class="reference internal" href="#see-also" id="id14">See Also</a></li>
 </ul>
 </div>
 <p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> is a PostgreSQL extension which lets you remove bloat from
@@ -419,6 +420,17 @@ NOT NULL column.</li>
 indexes. For example, if the total size of the tables and indexes to be
 reorganized is 1GB, an additional 2GB of disk space is required.</dd>
 </dl>
+</div>
+<div class="section" id="download">
+<h2>Download</h2>
+<p>You can <a class="reference external" href="http://pgxn.org/dist/pg_repack/">download pg_repack</a> from the PGXN website. Unpack the archive and
+follow the <a class="reference internal" href="#installation">installation</a> instructions.</p>
+<p>Alternatively you can use the <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/">PGXN Client</a> to download, compile and install
+the package; use:</p>
+<pre class="literal-block">
+$ pgxn install pg_repack
+</pre>
+<p>Check the <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install">pgxn install documentation</a> for the options available.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation</h2>
