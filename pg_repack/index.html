@@ -587,8 +587,9 @@ the server is listening for connections.</dd>
 <dt><tt class="docutils literal"><span class="pre">-w</span></tt>, <tt class="docutils literal"><span class="pre">--no-password</span></tt></dt>
 <dd>Never issue a password prompt. If the server requires password
 authentication and a password is not available by other means such as a
-.pgpass file, the connection attempt will fail. This option can be useful
-in batch jobs and scripts where no user is present to enter a password.</dd>
+<tt class="docutils literal">.pgpass</tt> file, the connection attempt will fail. This option can be
+useful in batch jobs and scripts where no user is present to enter a
+password.</dd>
 <dt><tt class="docutils literal"><span class="pre">-W</span></tt>, <tt class="docutils literal"><span class="pre">--password</span></tt></dt>
 <dd><p class="first">Force the program to prompt for a password before connecting to a
 database.</p>
@@ -702,19 +703,19 @@ corruptions.</p>
 <div class="section" id="ddl-commands">
 <h3>DDL commands</h3>
 <p>You cannot do DDL commands <strong>except</strong> VACUUM and ANALYZE during pg_repack. In many
-cases pg_repack will fail and rollback collectly, but there are some cases
-which may result in data-corruption .</p>
+cases pg_repack will fail and rollback correctly, but there are some cases
+which may result in data corruption.</p>
 <dl class="docutils">
 <dt>TRUNCATE</dt>
 <dd>TRUNCATE is lost. Deleted rows still exist after pg_repack.</dd>
 <dt>CREATE INDEX</dt>
-<dd>It causes index corruptions.</dd>
+<dd>It causes index corruption.</dd>
 <dt>ALTER TABLE ... ADD COLUMN</dt>
-<dd>It causes lost of data. Newly added columns are initialized with NULLs.</dd>
+<dd>It causes loss of data. Newly added columns are initialized with NULLs.</dd>
 <dt>ALTER TABLE ... ALTER COLUMN TYPE</dt>
-<dd>It causes data corruptions.</dd>
+<dd>It causes data corruption.</dd>
 <dt>ALTER TABLE ... SET TABLESPACE</dt>
-<dd>It causes data corruptions by wrong relfilenode.</dd>
+<dd>It causes data corruption by wrong relfilenode.</dd>
 </dl>
 </div>
 </div>
