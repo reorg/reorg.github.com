@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
 <title>pg_repack 1.2dev0 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
@@ -68,7 +68,7 @@ div.contents ul {
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
+:Id: $Id: html4css1.css 7434 2012-05-11 21:06:27Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -308,9 +308,17 @@ pre.address {
   margin-top: 0 ;
   font: inherit }
 
-pre.literal-block, pre.doctest-block, pre.math {
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
   margin-left: 2em ;
   margin-right: 2em }
+
+pre.code .ln { /* line numbers */
+  color: grey;
+}
+
+.code {
+  background-color: #eeeeee
+}
 
 span.classifier {
   font-family: sans-serif ;
@@ -566,19 +574,20 @@ using cluster indexes. Only one option can be specified. You may also specify
 target tables or databases.</p>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
-<dd>Do online VACUUM FULL.</dd>
+<dd>Perform an online VACUUM FULL.</dd>
 <dt><tt class="docutils literal"><span class="pre">-o</span> COLUMNS <span class="pre">[,...]</span></tt>, <tt class="docutils literal"><span class="pre">--order-by=COLUMNS</span> <span class="pre">[,...]</span></tt></dt>
-<dd>Do online CLUSTER ordered by specified columns.</dd>
+<dd>Perform an online CLUSTER ordered by the specified columns.</dd>
 <dt><tt class="docutils literal"><span class="pre">-t</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--table=TABLE</span></tt></dt>
-<dd>Reorganize table only. If you don't specify this option, all tables in
-specified databases are reorganized.</dd>
+<dd>Reorganize the specified table only. By default, all eligible tables in
+the target databases are reorganized.</dd>
 <dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
 <dd>pg_repack needs to take an exclusive lock at the end of the
-reorganization.  This setting controls how long it wait for acquiring the
-lock in seconds. If the lock cannot be taken even after the duration,
-pg_repack forces to cancel conflicted queries. Also, if the server version
-is 8.4 or newer, pg_repack forces to disconnect conflicted backends after
-twice time passed. The default is 60 seconds.</dd>
+reorganization.  This setting controls how many seconds pg_repack will
+wait to acquite this lock. If the lock cannot be taken after this duration,
+pg_repack will forcibly cancel the conflicting queries. If you are using
+PostgreSQL version 8.4 or newer, pg_repack will fall back to using
+pg_terminate_backend() to disconnect any remaining backends after
+twice this timeout has passed. The default is 60 seconds.</dd>
 <dt><tt class="docutils literal"><span class="pre">-Z</span></tt>, <tt class="docutils literal"><span class="pre">--no-analyze</span></tt></dt>
 <dd>Disable ANALYZE after the reorganization. If not specified, run ANALYZE
 after the reorganization.</dd>
@@ -651,12 +660,12 @@ environment variables supported by libpq (see <a class="reference external" href
 <div class="section" id="examples">
 <h2>Examples</h2>
 <p>Execute the following command to perform an online CLUSTER of all tables in
-test database:</p>
+database <tt class="docutils literal">test</tt>:</p>
 <pre class="literal-block">
 $ pg_repack test
 </pre>
-<p>Execute the following command to perform an online VACUUM FULL to foo table in
-test database:</p>
+<p>Execute the following command to perform an online VACUUM FULL of table
+<tt class="docutils literal">foo</tt> in database <tt class="docutils literal">test</tt>:</p>
 <pre class="literal-block">
 $ pg_repack --no-order --table foo -d test
 </pre>
@@ -673,14 +682,14 @@ version load the script <tt class="docutils literal">$SHAREDIR/contrib/uninstall
 database where the error occured and then load
 <tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> again.</p>
 <dl class="docutils">
-<dt>pg_repack: reorg database &quot;template1&quot; ... skipped: pg_repack is not installed in the database</dt>
+<dt>pg_repack: repack database &quot;template1&quot; ... skipped: pg_repack is not installed in the database</dt>
 <dd><p class="first">pg_repack is not installed in the database when <tt class="docutils literal"><span class="pre">--all</span></tt> option is
 specified.</p>
-<p class="last">Do register pg_repack to the database.</p>
+<p class="last">Create the pg_repack extension in the database.</p>
 </dd>
 <dt>ERROR: pg_repack is not installed</dt>
 <dd><p class="first">pg_repack is not installed in the database specified by <tt class="docutils literal"><span class="pre">--dbname</span></tt>.</p>
-<p class="last">Do register pg_repack to the database.</p>
+<p class="last">Create the pg_repack extension in the database.</p>
 </dd>
 <dt>ERROR: program 'pg_repack V1' does not match database library 'pg_repack V2'</dt>
 <dd><p class="first">There is a mismatch between the <tt class="docutils literal">pg_repack</tt> binary and the database
@@ -696,13 +705,15 @@ required by the pg_repack program.</p>
 <p class="last">You should drop the extension from the database and reload it as described
 in the <a class="reference internal" href="#installation">installation</a> section.</p>
 </dd>
-<dt>ERROR: relation &quot;table&quot; has no primary key</dt>
-<dd><p class="first">The target table doesn't have PRIMARY KEY.</p>
-<p class="last">Define PRIMARY KEY to the table. (ALTER TABLE ADD PRIMARY KEY)</p>
+<dt>ERROR: relation &quot;table&quot; must have a primary key or not-null unique keys</dt>
+<dd><p class="first">The target table doesn't have a PRIMARY KEY or any UNIQUE constraints
+defined.</p>
+<p class="last">Define a PRIMARY KEY or a UNIQUE constraint on the table.</p>
 </dd>
 <dt>ERROR: relation &quot;table&quot; has no cluster key</dt>
 <dd><p class="first">The target table doesn't have CLUSTER KEY.</p>
-<p class="last">Define CLUSTER KEY to the table. (ALTER TABLE CLUSTER)</p>
+<p class="last">Define a CLUSTER KEY on the table, via ALTER TABLE CLUSTER ON, or use
+one of the --no-order or --order-by modes.</p>
 </dd>
 <dt>pg_repack: query failed: ERROR: column &quot;col&quot; does not exist</dt>
 <dd><p class="first">The target table doesn't have columns specified by <tt class="docutils literal"><span class="pre">--order-by</span></tt> option.</p>
@@ -710,14 +721,14 @@ in the <a class="reference internal" href="#installation">installation</a> secti
 </dd>
 <dt>ERROR: permission denied for schema repack</dt>
 <dd><p class="first">Permission error.</p>
-<p class="last">pg_repack must be executed by superusers.</p>
+<p class="last">pg_repack must be executed by a superuser.</p>
 </dd>
 <dt>pg_repack: query failed: ERROR: trigger &quot;z_repack_trigger&quot; for relation &quot;tbl&quot; already exists</dt>
 <dd><p class="first">The target table already has a trigger named <tt class="docutils literal">z_repack_trigger</tt>.</p>
 <p class="last">Delete or rename the trigger.</p>
 </dd>
 <dt>pg_repack: trigger conflicted for tbl</dt>
-<dd><p class="first">The target table already has a trigger which follows by
+<dd><p class="first">The target table already has a trigger which follows
 <tt class="docutils literal">z_repack_trigger</tt> in alphabetical order.</p>
 <p class="last">Delete or rename the trigger.</p>
 </dd>
@@ -737,7 +748,8 @@ corruptions.</p>
 </div>
 <div class="section" id="ddl-commands">
 <h3>DDL commands</h3>
-<p>You cannot do DDL commands <strong>except</strong> VACUUM and ANALYZE during pg_repack. In many
+<p>You cannot perform DDL commands of the target table(s) <strong>except</strong> VACUUM and
+ANALYZE during pg_repack. In many
 cases pg_repack will fail and rollback correctly, but there are some cases
 which may result in data corruption.</p>
 <dl class="docutils">
