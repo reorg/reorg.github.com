@@ -63,6 +63,13 @@ div.contents ul {
 	padding-left: 1em;
 }
 
+dl.diag dt,
+dl.ddl dt {
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+}
+
 </style>
 <style type="text/css">
 
@@ -583,7 +590,7 @@ the target databases are reorganized.</dd>
 <dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
 <dd>pg_repack needs to take an exclusive lock at the end of the
 reorganization.  This setting controls how many seconds pg_repack will
-wait to acquite this lock. If the lock cannot be taken after this duration,
+wait to acquire this lock. If the lock cannot be taken after this duration,
 pg_repack will forcibly cancel the conflicting queries. If you are using
 PostgreSQL version 8.4 or newer, pg_repack will fall back to using
 pg_terminate_backend() to disconnect any remaining backends after
@@ -681,7 +688,7 @@ the error occurred, followed by <tt class="docutils literal">CREATE EXTENSION pg
 version load the script <tt class="docutils literal">$SHAREDIR/contrib/uninstall_pg_repack.sql</tt> into the
 database where the error occured and then load
 <tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> again.</p>
-<dl class="docutils">
+<dl class="diag docutils">
 <dt>pg_repack: repack database &quot;template1&quot; ... skipped: pg_repack is not installed in the database</dt>
 <dd><p class="first">pg_repack is not installed in the database when <tt class="docutils literal"><span class="pre">--all</span></tt> option is
 specified.</p>
@@ -752,7 +759,7 @@ corruptions.</p>
 ANALYZE during pg_repack. In many
 cases pg_repack will fail and rollback correctly, but there are some cases
 which may result in data corruption.</p>
-<dl class="docutils">
+<dl class="ddl docutils">
 <dt>TRUNCATE</dt>
 <dd>TRUNCATE is lost. Deleted rows still exist after pg_repack.</dd>
 <dt>CREATE INDEX</dt>
