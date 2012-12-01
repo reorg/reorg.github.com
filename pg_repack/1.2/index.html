@@ -731,13 +731,18 @@ one of the --no-order or --order-by modes.</p>
 <p class="last">pg_repack must be executed by a superuser.</p>
 </dd>
 <dt>pg_repack: query failed: ERROR: trigger &quot;z_repack_trigger&quot; for relation &quot;tbl&quot; already exists</dt>
-<dd><p class="first">The target table already has a trigger named <tt class="docutils literal">z_repack_trigger</tt>.</p>
-<p class="last">Delete or rename the trigger.</p>
+<dd><p class="first">The target table has already a trigger named <tt class="docutils literal">z_repack_trigger</tt>.  This
+is probably caused by a previous failed attempt to run pg_repack on the
+table, which for some reason failed to clean up the temporary object.</p>
+<p class="last">You can remove all the temporary objects by dropping and re-creating the
+extension: see the <a class="reference internal" href="#installation">installation</a> section for the details.</p>
 </dd>
 <dt>pg_repack: trigger conflicted for tbl</dt>
-<dd><p class="first">The target table already has a trigger which follows
-<tt class="docutils literal">z_repack_trigger</tt> in alphabetical order.</p>
-<p class="last">Delete or rename the trigger.</p>
+<dd><p class="first">The target table has a trigger whose name follows <tt class="docutils literal">z_repack_trigger</tt>
+in alphabetical order.</p>
+<p class="last">The <tt class="docutils literal">z_repack_trigger</tt> should be the last BEFORE trigger to fire.
+Please rename your trigger to that it sorts alphabetically before
+pg_repack's one.</p>
 </dd>
 </dl>
 </div>
