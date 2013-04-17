@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.2dev0 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.2dev1 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 body {
@@ -388,8 +388,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-2dev0-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.2dev0 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-2dev1-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.2dev1 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
@@ -499,17 +499,27 @@ pg_repack [OPTION]... [DBNAME]
 <tr><td class="option-group">
 <kbd><span class="option">-a</span>, <span class="option">--all</span></kbd></td>
 <td>repack all databases</td></tr>
-<tr><td class="option-group">
-<kbd><span class="option">-n</span>, <span class="option">--no-order</span></kbd></td>
-<td>do vacuum full instead of cluster</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">-o</span>, <span class="option">--order-by=<var>COLUMNS</var></span></kbd></td>
-</tr>
-<tr><td>&nbsp;</td><td>order by columns instead of cluster keys</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-t</span>, <span class="option">--table=<var>TABLE</var></span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>repack specific table only</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-s</span>, <span class="option">--tablespace=<var>TBLSPC</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>move repacked tables to a new tablespace</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-S</span>, <span class="option">--moveidx</span></kbd></td>
+<td>move repacked indexes to TBLSPC too</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-o</span>, <span class="option">--order-by=<var>COLUMNS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>order by columns instead of cluster keys</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span>, <span class="option">--no-order</span></kbd></td>
+<td>do vacuum full instead of cluster</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-j</span>, <span class="option">--jobs</span></kbd></td>
+<td>Use this many parallel jobs for each table</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-T</span>, <span class="option">--wait-timeout=<var>SECS</var></span></kbd></td>
 </tr>
@@ -576,17 +586,30 @@ pg_repack [OPTION]... [DBNAME]
 </dl>
 <div class="section" id="reorg-options">
 <h3>Reorg Options</h3>
-<p>Options to order rows. If not specified, pg_repack performs an online CLUSTER
-using cluster indexes. Only one option can be specified. You may also specify
-target tables or databases.</p>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
-<dd>Perform an online VACUUM FULL.</dd>
-<dt><tt class="docutils literal"><span class="pre">-o</span> COLUMNS <span class="pre">[,...]</span></tt>, <tt class="docutils literal"><span class="pre">--order-by=COLUMNS</span> <span class="pre">[,...]</span></tt></dt>
-<dd>Perform an online CLUSTER ordered by the specified columns.</dd>
+<dt><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">--all</span></tt></dt>
+<dd>Attempt repack all the databases of the cluster. Databases where the
+<tt class="docutils literal">pg_repack</tt> extension is not installed will be skipped.</dd>
 <dt><tt class="docutils literal"><span class="pre">-t</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--table=TABLE</span></tt></dt>
 <dd>Reorganize the specified table only. By default, all eligible tables in
 the target databases are reorganized.</dd>
+<dt><tt class="docutils literal"><span class="pre">-o</span> COLUMNS <span class="pre">[,...]</span></tt>, <tt class="docutils literal"><span class="pre">--order-by=COLUMNS</span> <span class="pre">[,...]</span></tt></dt>
+<dd>Perform an online CLUSTER ordered by the specified columns.</dd>
+<dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
+<dd>Perform an online VACUUM FULL.  Since version 1.2 this is the default for
+non-clustered tables.</dd>
+<dt><tt class="docutils literal"><span class="pre">-j</span></tt>, <tt class="docutils literal"><span class="pre">--jobs</span></tt></dt>
+<dd>Create the specified number of extra connections to PostgreSQL, and
+use these extra connections to parallelize the rebuild of indexes
+on each table. If your PostgreSQL server has extra cores and disk
+I/O available, this can be a useful way to speed up pg_repack.</dd>
+<dt><tt class="docutils literal"><span class="pre">-s</span> TBLSPC</tt>, <tt class="docutils literal"><span class="pre">--tablespace=TBLSPC</span></tt></dt>
+<dd>Move the repacked tables to the specified tablespace: essentially an
+online version of <tt class="docutils literal">ALTER TABLE ... SET TABLESPACE</tt>. The tables indexes
+are left on the original tablespace unless <tt class="docutils literal"><span class="pre">--moveidx</span></tt> is specified too.</dd>
+<dt><tt class="docutils literal"><span class="pre">-S</span></tt>, <tt class="docutils literal"><span class="pre">--moveidx</span></tt></dt>
+<dd>Move the indexes too of the repacked tables to the tablespace specified
+by the option <tt class="docutils literal"><span class="pre">--tablespace</span></tt>.</dd>
 <dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
 <dd>pg_repack needs to take an exclusive lock at the end of the
 reorganization.  This setting controls how many seconds pg_repack will
@@ -666,13 +689,13 @@ environment variables supported by libpq (see <a class="reference external" href
 </div>
 <div class="section" id="examples">
 <h2>Examples</h2>
-<p>Execute the following command to perform an online CLUSTER of all tables in
-database <tt class="docutils literal">test</tt>:</p>
+<p>Perform an online CLUSTER of all the clustered tables in the database
+<tt class="docutils literal">test</tt>, and perform an online VACUUM FULL of all the non-clustered tables:</p>
 <pre class="literal-block">
 $ pg_repack test
 </pre>
-<p>Execute the following command to perform an online VACUUM FULL of table
-<tt class="docutils literal">foo</tt> in database <tt class="docutils literal">test</tt>:</p>
+<p>Perform an online VACUUM FULL on the table <tt class="docutils literal">foo</tt> in the database <tt class="docutils literal">test</tt>
+(an eventual cluster index is ignored):</p>
 <pre class="literal-block">
 $ pg_repack --no-order --table foo -d test
 </pre>
@@ -722,7 +745,7 @@ defined.</p>
 <p class="last">Define a CLUSTER KEY on the table, via ALTER TABLE CLUSTER ON, or use
 one of the --no-order or --order-by modes.</p>
 </dd>
-<dt>pg_repack: query failed: ERROR: column &quot;col&quot; does not exist</dt>
+<dt>ERROR: query failed: ERROR: column &quot;col&quot; does not exist</dt>
 <dd><p class="first">The target table doesn't have columns specified by <tt class="docutils literal"><span class="pre">--order-by</span></tt> option.</p>
 <p class="last">Specify existing columns.</p>
 </dd>
@@ -730,19 +753,22 @@ one of the --no-order or --order-by modes.</p>
 <dd><p class="first">Permission error.</p>
 <p class="last">pg_repack must be executed by a superuser.</p>
 </dd>
-<dt>pg_repack: query failed: ERROR: trigger &quot;z_repack_trigger&quot; for relation &quot;tbl&quot; already exists</dt>
-<dd><p class="first">The target table has already a trigger named <tt class="docutils literal">z_repack_trigger</tt>.  This
-is probably caused by a previous failed attempt to run pg_repack on the
-table, which for some reason failed to clean up the temporary object.</p>
+<dt>WARNING: the table &quot;tbl&quot; has already a trigger called z_repack_trigger</dt>
+<dd><p class="first">The trigger was probably installed during a previous attempt to run
+pg_repack on the table which was interrupted and for some reason failed
+to clean up the temporary objects.</p>
 <p class="last">You can remove all the temporary objects by dropping and re-creating the
 extension: see the <a class="reference internal" href="#installation">installation</a> section for the details.</p>
 </dd>
-<dt>pg_repack: trigger conflicted for tbl</dt>
+<dt>WARNING: trigger &quot;trg&quot; conflicting on table &quot;tbl&quot;</dt>
 <dd><p class="first">The target table has a trigger whose name follows <tt class="docutils literal">z_repack_trigger</tt>
 in alphabetical order.</p>
-<p class="last">The <tt class="docutils literal">z_repack_trigger</tt> should be the last BEFORE trigger to fire.
+<p>The <tt class="docutils literal">z_repack_trigger</tt> should be the last BEFORE trigger to fire.
 Please rename your trigger to that it sorts alphabetically before
-pg_repack's one.</p>
+pg_repack's one; you can use:</p>
+<pre class="last literal-block">
+ALTER TRIGGER zzz_my_trigger ON sometable RENAME TO yyy_my_trigger;
+</pre>
 </dd>
 </dl>
 </div>
@@ -787,6 +813,16 @@ and the original one.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.2<ul>
+<li>Added --tablespace and --moveidx options to perform online SET TABLESPACE.</li>
+<li>Added --jobs option for parallel operation.</li>
+<li>Don't require --no-order to perform a VACUUM FULL on non-clustered tables
+(pg_repack issue #6).</li>
+<li>More helpful error messages.</li>
+<li>Bugfix: correctly handle key indexes with options such as DESC, NULL
+FIRST/LAST, COLLATE (pg_repack issue #3).</li>
+</ul>
+</li>
 <li>pg_repack 1.1.8<ul>
 <li>Added support for PostgreSQL 9.2.</li>
 <li>Added support for CREATE EXTENSION on PostgreSQL 9.1 and following.</li>
