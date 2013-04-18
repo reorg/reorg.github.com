@@ -509,7 +509,7 @@ pg_repack [OPTION]... [DBNAME]
 <tr><td>&nbsp;</td><td>move repacked tables to a new tablespace</td></tr>
 <tr><td class="option-group">
 <kbd><span class="option">-S</span>, <span class="option">--moveidx</span></kbd></td>
-<td>move repacked indexes to TBLSPC too</td></tr>
+<td>move repacked indexes to <em>TBLSPC</em> too</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-o</span>, <span class="option">--order-by=<var>COLUMNS</var></span></kbd></td>
 </tr>
@@ -712,12 +712,12 @@ version load the script <tt class="docutils literal">$SHAREDIR/contrib/uninstall
 database where the error occured and then load
 <tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> again.</p>
 <dl class="diag docutils">
-<dt>pg_repack: repack database &quot;template1&quot; ... skipped: pg_repack is not installed in the database</dt>
-<dd><p class="first">pg_repack is not installed in the database when <tt class="docutils literal"><span class="pre">--all</span></tt> option is
+<dt>INFO: database &quot;db&quot; skipped: pg_repack VER is not installed in the database</dt>
+<dd><p class="first">pg_repack is not installed in the database when the <tt class="docutils literal"><span class="pre">--all</span></tt> option is
 specified.</p>
 <p class="last">Create the pg_repack extension in the database.</p>
 </dd>
-<dt>ERROR: pg_repack is not installed</dt>
+<dt>ERROR: pg_repack VER is not installed in the database</dt>
 <dd><p class="first">pg_repack is not installed in the database specified by <tt class="docutils literal"><span class="pre">--dbname</span></tt>.</p>
 <p class="last">Create the pg_repack extension in the database.</p>
 </dd>
@@ -740,18 +740,9 @@ in the <a class="reference internal" href="#installation">installation</a> secti
 defined.</p>
 <p class="last">Define a PRIMARY KEY or a UNIQUE constraint on the table.</p>
 </dd>
-<dt>ERROR: relation &quot;table&quot; has no cluster key</dt>
-<dd><p class="first">The target table doesn't have CLUSTER KEY.</p>
-<p class="last">Define a CLUSTER KEY on the table, via ALTER TABLE CLUSTER ON, or use
-one of the --no-order or --order-by modes.</p>
-</dd>
 <dt>ERROR: query failed: ERROR: column &quot;col&quot; does not exist</dt>
 <dd><p class="first">The target table doesn't have columns specified by <tt class="docutils literal"><span class="pre">--order-by</span></tt> option.</p>
 <p class="last">Specify existing columns.</p>
-</dd>
-<dt>ERROR: permission denied for schema repack</dt>
-<dd><p class="first">Permission error.</p>
-<p class="last">pg_repack must be executed by a superuser.</p>
 </dd>
 <dt>WARNING: the table &quot;tbl&quot; has already a trigger called z_repack_trigger</dt>
 <dd><p class="first">The trigger was probably installed during a previous attempt to run
@@ -814,13 +805,14 @@ and the original one.</p>
 <h2>Releases</h2>
 <ul class="simple">
 <li>pg_repack 1.2<ul>
-<li>Added --tablespace and --moveidx options to perform online SET TABLESPACE.</li>
-<li>Added --jobs option for parallel operation.</li>
-<li>Don't require --no-order to perform a VACUUM FULL on non-clustered tables
-(pg_repack issue #6).</li>
-<li>More helpful error messages.</li>
+<li>Added <tt class="docutils literal"><span class="pre">--tablespace</span></tt> and <tt class="docutils literal"><span class="pre">--moveidx</span></tt> options to perform online
+SET TABLESPACE.</li>
+<li>Added <tt class="docutils literal"><span class="pre">--jobs</span></tt> option for parallel operation.</li>
+<li>Don't require <tt class="docutils literal"><span class="pre">--no-order</span></tt> to perform a VACUUM FULL on non-clustered
+tables (pg_repack issue #6).</li>
 <li>Bugfix: correctly handle key indexes with options such as DESC, NULL
 FIRST/LAST, COLLATE (pg_repack issue #3).</li>
+<li>More helpful program output and error messages.</li>
 </ul>
 </li>
 <li>pg_repack 1.1.8<ul>
