@@ -1,7 +1,6 @@
 # reorg.github.com -- html pages generation
 
-CURRENT = 1.1
-DEVEL = 1.2
+CURRENT = 1.2
 
 CSS = sm/master/doc/style.css
 RST2HTML = $(shell which rst2html || which rst2html.py)
