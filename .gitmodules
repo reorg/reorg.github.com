@@ -1,9 +1,9 @@
 [submodule "sm/1.1"]
 	path = sm/1.1
-	url = git://github.com/reorg/pg_repack.git
+    url = https://github.com/reorg/pg_repack.git
 [submodule "sm/master"]
 	path = sm/master
-	url = git://github.com/reorg/pg_repack.git
+    url = https://github.com/reorg/pg_repack.git
 [submodule "sm/1.2"]
 	path = sm/1.2
-	url = git://github.com/reorg/pg_repack.git
+    url = https://github.com/reorg/pg_repack.git
