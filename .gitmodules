@@ -4,3 +4,6 @@
 [submodule "sm/master"]
 	path = sm/master
 	url = git://github.com/reorg/pg_repack.git
+[submodule "sm/1.2"]
+	path = sm/1.2
+	url = git://github.com/reorg/pg_repack.git
