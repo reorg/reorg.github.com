@@ -806,22 +806,19 @@ to clean up the temporary objects.</p>
 <p class="last">You can remove all the temporary objects by dropping and re-creating the
 extension: see the <a class="reference internal" href="#installation">installation</a> section for the details.</p>
 </dd>
-<dt>ERROR: Another pg_repack command may be running on the table. Please try again</dt>
-<dd><blockquote class="first">
-later.</blockquote>
-<p class="last">There is a chance of deadlock when two concurrent pg_repack commands are run
-on the same table. So, try to run the command after some time.</p>
-</dd>
-</dl>
-<p>WARNING: Cannot create index  &quot;schema&quot;.&quot;index_xxxxx&quot;, already exists
-DETAIL: An invalid index may have been left behind by a previous pg_repack on
-the table which was interrupted. Please use DROP INDEX &quot;schema&quot;.&quot;index_xxxxx&quot;
-to remove this index and try again.</p>
-<blockquote>
-A temporary index apparently created by pg_repack has been left behind, and
+<dt>ERROR: Another pg_repack command may be running on the table. Please try again later.</dt>
+<dd>There is a chance of deadlock when two concurrent pg_repack commands are
+run on the same table. So, try to run the command after some time.</dd>
+<dt>WARNING: Cannot create index  &quot;schema&quot;.&quot;index_xxxxx&quot;, already exists</dt>
+<dd><p class="first">DETAIL: An invalid index may have been left behind by a previous pg_repack
+on the table which was interrupted. Please use DROP INDEX
+&quot;schema&quot;.&quot;index_xxxxx&quot; to remove this index and try again.</p>
+<p class="last">A temporary index apparently created by pg_repack has been left behind, and
 we do not want to risk dropping this index ourselves. If the index was in
 fact created by an old pg_repack job which didn't get cleaned up, you
-should just use DROP INDEX and try the repack command again.</blockquote>
+should just use DROP INDEX and try the repack command again.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="restrictions">
 <h2>Restrictions</h2>
