@@ -1,6 +1,6 @@
 # reorg.github.com -- html pages generation
 
-CURRENT = 1.3
+CURRENT = 1.4
 
 PIP = env/bin/pip
 VIRTUALENV = virtualenv
@@ -16,8 +16,11 @@ VERSION_1_2 = $(shell grep '"version":' sm/1.2/META.json | head -1 \
 	| sed -e 's/\s*"version":\s*"\(.*\)",/\1/')
 VERSION_1_3 = $(shell grep '"version":' sm/1.3/META.json | head -1 \
 	| sed -e 's/\s*"version":\s*"\(.*\)",/\1/')
+VERSION_1_4 = $(shell grep '"version":' sm/1.4/META.json | head -1 \
+	| sed -e 's/\s*"version":\s*"\(.*\)",/\1/')
 
-HTML = pg_repack/index.html pg_repack/1.1/index.html pg_repack/1.2/index.html pg_repack/1.3/index.html
+HTML = pg_repack/index.html pg_repack/1.1/index.html pg_repack/1.2/index.html \
+	   pg_repack/1.3/index.html pg_repack/1.4/index.html
 
 .PHONY: $(HTML)
 
@@ -39,6 +42,10 @@ pg_repack/1.2/index.html: sm/1.2/doc/pg_repack.rst $(CSS) $(RST2HTML)
 pg_repack/1.3/index.html: sm/1.3/doc/pg_repack.rst $(CSS) $(RST2HTML)
 	mkdir -p pg_repack/1.3/
 	$(ADDVERSION) $(VERSION_1_3) < $< | $(RST2HTML) $(RSTOPTS) > $@
+
+pg_repack/1.4/index.html: sm/1.4/doc/pg_repack.rst $(CSS) $(RST2HTML)
+	mkdir -p pg_repack/1.4/
+	$(ADDVERSION) $(VERSION_1_4) < $< | $(RST2HTML) $(RSTOPTS) > $@
 
 $(RST2HTML): requirements.txt $(PIP)
 	$(PIP) install -U -r requirements.txt
