@@ -11,12 +11,22 @@ RSTOPTS = --template=template.txt --stylesheet-path=$(CSS),$(RSTCSS) --initial-h
 
 ADDVERSION = python tools/addversion.py
 
+SM = sm/1.1 sm/1.2 sm/1.3 sm/master
+
 HTML = pg_repack/index.html pg_repack/1.1/index.html pg_repack/1.2/index.html \
 	   pg_repack/1.3/index.html pg_repack/1.4/index.html
 
 all: html
 
+sm: $(SM)
+
 html: $(HTML)
+
+sm/master: FORCE
+	cd $@ && git fetch && git reset --hard origin/master
+
+sm/?.?: FORCE
+	cd $@ && git fetch && git reset --hard origin/maint_`basename $@`
 
 pg_repack/index.html: pg_repack/$(CURRENT)/index.html
 	cat $< > $@
@@ -33,3 +43,6 @@ $(RST2HTML): requirements.txt $(PIP)
 
 env/bin/pip:
 	$(VIRTUALENV) env
+
+# .PHONY doesn't seem to work with vpath rules?
+FORCE:
