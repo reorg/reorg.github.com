@@ -1,5 +1,7 @@
 # reorg.github.com -- html pages generation
 
+VERSIONS = 1.1 1.2 1.3 1.4
+VERSIONS_JP = 1.3 1.4
 CURRENT = 1.4
 
 PIP = env/bin/pip
@@ -13,8 +15,10 @@ ADDVERSION = python tools/addversion.py
 
 SM = sm/1.1 sm/1.2 sm/1.3 sm/master
 
-HTML = pg_repack/index.html pg_repack/1.1/index.html pg_repack/1.2/index.html \
-	   pg_repack/1.3/index.html pg_repack/1.4/index.html
+HTML_EN = pg_repack/index.html $(patsubst %,pg_repack/%/index.html,$(VERSIONS))
+HTML_JP = pg_repack/jp/index.html $(patsubst %,pg_repack/%/jp/index.html,$(VERSIONS_JP))
+
+HTML = $(HTML_EN) $(HTML_JP)
 
 all: html
 
@@ -31,7 +35,18 @@ sm/?.?: FORCE
 pg_repack/index.html: pg_repack/$(CURRENT)/index.html
 	cat $< > $@
 
+pg_repack/jp/index.html: pg_repack/$(CURRENT)/jp/index.html
+	mkdir -p `dirname $@`
+	cat $< > $@
+
 pg_repack/%/index.html: sm/%/doc/pg_repack.rst $(CSS) $(RST2HTML)
+	mkdir -p `dirname $@`
+	$(eval VER := $(shell \
+		grep '"version":' `dirname $<`/..//META.json | head -1 \
+			| sed -e 's/\s*"version":\s*"\(.*\)",/\1/'))
+	$(ADDVERSION) $(VER) < $< | $(RST2HTML) $(RSTOPTS) > $@
+
+pg_repack/%/jp/index.html: sm/%/doc/pg_repack_jp.rst $(CSS) $(RST2HTML)
 	mkdir -p `dirname $@`
 	$(eval VER := $(shell \
 		grep '"version":' `dirname $<`/..//META.json | head -1 \

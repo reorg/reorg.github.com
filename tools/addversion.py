@@ -9,6 +9,7 @@ name.
 
 import sys
 
+
 def main():
     version = sys.argv[1]
     lines = sys.stdin.readlines()
@@ -16,7 +17,7 @@ def main():
     # find the title
     for i, l in enumerate(lines):
         l = l.rstrip()
-        if l == '=' * len(l):
+        if l and l == '=' * len(l):
             title = lines[i-1]
             title = title.split()
             title.insert(title.index('--'), version)
@@ -32,4 +33,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-
