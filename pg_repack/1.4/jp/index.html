@@ -1,0 +1,1439 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
+<title>pg_repack 1.4-dev0 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
+<style type="text/css">
+
+body {
+	font-family:
+		Lucida Grande, Verdana, Arial, Helvetica,
+		'メイリオ',
+		'Meiryo',
+		'ヒラギノ角ゴ Pro W3',
+		'Hiragino Kaku Gothic Pro',
+		'Osaka',
+		'ＭＳ Ｐゴシック',
+		sans-serif;
+	color: #202020;
+}
+
+h2, h3, h4, h5, h6 {
+    color: Black;
+    background: none;
+    padding-top: 0.5em;
+    padding-bottom: 0.17em;
+    border-bottom: 1px solid #aaaaaa;
+}
+H1 { font-size: x-large; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H2 { font-size: large; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H3 { padding-left: 1em; font-size: medium; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H4 { padding-left: 2em; font-size: small; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H5 { padding-left: 3em; font-size: x-small; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+H6 { padding-left: 4em; font-size: xx-small; font-family: Lucida Grande,verdana,arial,helvetica,sans-serif; }
+
+pre {
+	font-family: courier,sans-serif;
+	background-color: #FBFBFD;
+	border: 1px dashed #7E7ECB;
+	color: black;
+	line-height: 1.1em; padding: 0.5em;
+	overflow: auto;
+}
+
+li {
+	line-height: 1.4em;
+}
+
+div.contents {
+	float:right;
+	border:thin solid black;
+	background-color: white;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	padding-left: 1em;
+	padding-right: 1em;
+	margin-left: 0.5em;
+	margin-top: 2.5em !important;
+}
+
+div.contents ul {
+	padding-left: 1em;
+}
+
+dl.diag dt,
+dl.ddl dt {
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+}
+
+</style>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7514 2012-09-14 14:27:12Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: grey; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="pg-repack-1-4-dev0-postgresql">
+<h1 class="title">pg_repack 1.4-dev0 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
+
+<!-- pg_repack - - Reorganize tables in PostgreSQL databases with minimal locks
+========================================================================= -->
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id22">動作環境</a></li>
+<li><a class="reference internal" href="#id2" id="id23">ダウンロード</a></li>
+<li><a class="reference internal" href="#id5" id="id24">インストール</a></li>
+<li><a class="reference internal" href="#id6" id="id25">利用方法</a></li>
+<li><a class="reference internal" href="#id7" id="id26">再編成オプション</a></li>
+<li><a class="reference internal" href="#id8" id="id27">接続オプション</a></li>
+<li><a class="reference internal" href="#id9" id="id28">一般オプション</a></li>
+<li><a class="reference internal" href="#id10" id="id29">環境変数</a></li>
+<li><a class="reference internal" href="#id12" id="id30">利用例</a></li>
+<li><a class="reference internal" href="#id13" id="id31">トラブルシューティング</a></li>
+<li><a class="reference internal" href="#id14" id="id32">制約</a></li>
+<li><a class="reference internal" href="#id16" id="id33">動作詳細</a></li>
+<li><a class="reference internal" href="#id20" id="id34">リリースノート</a></li>
+<li><a class="reference internal" href="#id21" id="id35">関連項目</a></li>
+</ul>
+</div>
+<!-- pg_repack_ is a PostgreSQL extension which lets you remove bloat from
+tables and indexes, and optionally restore the physical order of clustered
+indexes. Unlike CLUSTER_ and `VACUUM FULL`_ it works online, without
+holding an exclusive lock on the processed tables during processing.
+pg_repack is efficient to boot, with performance comparable to using
+CLUSTER directly. -->
+<p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> はPostgreSQLの拡張の一つで、肥大化したテーブルやインデックスを再編成し、さらに指定したインデックスにしたがってレコードを並び替えることができます。
+PostgreSQLの <a class="reference external" href="http://www.postgresql.jp/document/current/html/sql-cluster.html">CLUSTER</a> や <a class="reference external" href="http://www.postgresql.jp/document/current/html/sql-vacuum.html">VACUUM FULL</a> コマンドと違って、pg_repackは処理の間対象テーブルへの排他ロックを保持し続けないため、オンライン中に動作させることができます。
+pg_repackはCLUSTERコマンドを直接実行するのと同じくらいの性能で起動することができて効率的です。</p>
+<!-- pg_repack is a fork of the previous pg_reorg_ project. Please check the
+`project page`_ for bug report and development information. -->
+<p>pg_repack は <a class="reference external" href="http://reorg.projects.pgfoundry.org/">pg_reorg</a> からフォークしたプロジェクトです。
+バグ報告や開発情報については <a class="reference external" href="https://github.com/reorg/pg_repack">project page</a> を参照してください。</p>
+<!-- You can choose one of the following methods to reorganize:
+
+* Online CLUSTER (ordered by cluster index)
+* Ordered by specified columns
+* Online VACUUM FULL (packing rows only)
+* Rebuild or relocate only the indexes of a table -->
+<p>pg_repackでは再編成する方法として次のものが選択できます。</p>
+<ul class="simple">
+<li>オンラインCLUSTER (cluster index順にレコードを並び替える)</li>
+<li>指定したカラムでレコードを並び替える</li>
+<li>オンラインVACUUM FULL (レコードのすきまを詰める)</li>
+<li>指定したテーブルのインデックスだけを再構築、もしくは再配置する</li>
+</ul>
+<!-- NOTICE:
+
+* Only superusers can use the utility.
+* Target table must have a PRIMARY KEY, or at least a UNIQUE total index on a
+  NOT NULL column. -->
+<p>注意:</p>
+<ul class="simple">
+<li>DBのスーパーユーザだけがpg_repackを実行できます</li>
+<li>対象となるテーブルは主キー、もしくはNOT NULL制約を持つカラムへのユニーク制約をもつインデックスが存在している必要があります</li>
+</ul>
+<!-- Requirements
+- - - - - - - - - - - -
+
+PostgreSQL versions
+    PostgreSQL 8.3, 8.4, 9.0, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6
+
+Disks
+    Performing a full-table repack requires free disk space about twice as
+    large as the target table(s) and its indexes. For example, if the total
+    size of the tables and indexes to be reorganized is 1GB, an additional 2GB
+    of disk space is required. -->
+<div class="section" id="id1">
+<h2>動作環境</h2>
+<dl class="docutils">
+<dt>PostgreSQL バージョン</dt>
+<dd>PostgreSQL 8.3, 8.4, 9.0, 9.1, 9.2, 9.3, 9.4</dd>
+<dt>ディスク</dt>
+<dd>テーブル全体の再編成を行うには、対象となるテーブルと付属するインデックスのおよそ2倍のサイズのディスク空き容量が必要です。例えば、テーブルとインデックスを合わせたサイズが1GBの場合、2GBのディスク領域が必要となります。</dd>
+</dl>
+<!-- Download
+- - - - - - - -
+
+You can `download pg_repack`__ from the PGXN website. Unpack the archive and
+follow the installation_ instructions.
+
+.. __: http://pgxn.org/dist/pg_repack/
+
+Alternatively you can use the `PGXN Client`_ to download, compile and install
+the package; use::
+
+    $ pgxn install pg_repack
+
+Check the `pgxn install documentation`__ for the options available.
+
+.. _PGXN Client: http://pgxnclient.projects.pgfoundry.org/
+.. __: http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install -->
+</div>
+<div class="section" id="id2">
+<h2>ダウンロード</h2>
+<p>pg_repackは、PGXNのWebサイトから <a class="reference external" href="http://pgxn.org/dist/pg_repack/">ダウンロード</a> できます。
+ダウンロードしたアーカイブを展開し、以下の手順にしたがって <a class="reference internal" href="#id5">インストール</a> してください。</p>
+<p>もしくは、 <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/">PGXN Client</a> を使ってダウンロードからコンパイル、インストールすることもできます。:</p>
+<pre class="literal-block">
+$ pgxn install pg_repack
+</pre>
+<p>利用可能なオプションについては <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install">pgxn install コマンドのドキュメント</a> を参照してください。</p>
+<!-- Installation
+- - - - - - - - - - - -
+
+pg_repack can be built with ``make`` on UNIX or Linux. The PGXS build
+framework is used automatically. Before building, you might need to install
+the PostgreSQL development packages (``postgresql-devel``, etc.) and add the
+directory containing ``pg_config`` to your ``$PATH``. Then you can run::
+
+    $ cd pg_repack
+    $ make
+    $ sudo make install
+
+You can also use Microsoft Visual C++ 2010 to build the program on Windows.
+There are project files in the ``msvc`` folder.
+
+After installation, load the pg_repack extension in the database you want to
+process. On PostgreSQL 9.1 and following pg_repack is packaged as an
+extension, so you can execute::
+
+    $ psql -c "CREATE EXTENSION pg_repack" -d your_database
+
+For previous PostgreSQL versions you should load the script
+``$SHAREDIR/contrib/pg_repack.sql`` in the database to process; you can
+get ``$SHAREDIR`` using ``pg_config - -sharedir``, e.g. ::
+
+    $ psql -f "$(pg_config - -sharedir)/contrib/pg_repack.sql" -d your_database
+
+You can remove pg_repack from a PostgreSQL 9.1 and following database using
+``DROP EXTENSION pg_repack``. For previous Postgresql versions load the
+``$SHAREDIR/contrib/uninstall_pg_repack.sql`` script or just drop the
+``repack`` schema.
+
+If you are upgrading from a previous version of pg_repack or pg_reorg, just
+drop the old version from the database as explained above and install the new
+version. -->
+</div>
+<div class="section" id="id5">
+<h2>インストール</h2>
+<p>Unix やLinux上では、pg_repackは <tt class="docutils literal">make</tt> コマンドでビルドすることができます。
+その際、PostgreSQLの拡張向けの構築基盤であるPGXSが自動で利用されます。
+ビルトに当たっては、事前にPostgreSQLの開発パッケージ (<tt class="docutils literal"><span class="pre">postgresql-devel</span></tt>, etc.)をインストールしておく必要があるかもしれません。
+そして、 <tt class="docutils literal">pg_config</tt> コマンドが存在するディレクトリが <tt class="docutils literal">$PATH</tt> に追加されている必要があります。</p>
+<p>その上で、以下のコマンドを実行します。:</p>
+<pre class="literal-block">
+$ cd pg_repack
+$ make
+$ sudo make install
+</pre>
+<p>Windows OS上ではMicrosoft Visual C++ 2010を利用してビルドすることができます。
+<tt class="docutils literal">msvc</tt> ディレクトリ配下にプロジェクトファイルがあります。</p>
+<p>インストールを行った後、pg_repack エクステンションを対象のデータベースに登録します。
+PostgreSQL 9.1以上のバージョンでは、以下のコマンドで実施できます。</p>
+<pre class="literal-block">
+$ psql -c &quot;CREATE EXTENSION pg_repack&quot; -d your_database
+</pre>
+<p>それ以前のPostgreSQLバージョンの場合は、 <tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> スクリプトを対象とするデータベースに対して実施します。 <tt class="docutils literal">$SHAREDIR</tt> は <tt class="docutils literal">pg_config <span class="pre">--sharedir</span></tt> コマンドを実行することで確認できます。</p>
+<pre class="literal-block">
+$ psql -f &quot;$(pg_config --sharedir)/contrib/pg_repack.sql&quot; -d your_database
+</pre>
+<p>pg_repackの登録を削除するには、PostgreSQL 9.1以上のバージョンでは、<tt class="docutils literal">DROP EXTENSION pg_repack</tt> を対象データベースに実行します。それ以前のPostgreSQLバージョンの場合は、 <tt class="docutils literal">$SHAREDIR/contrib/uninstall_pg_repack.sql</tt> スクリプトを実行するか、 <tt class="docutils literal">repack</tt> スキーマを削除します。</p>
+<p>pg_repackもしくはpg_reorgの古いバージョンからのアップグレードを行うには、古いバージョンをデータベースから上記の手順で削除し、新しいバージョンを登録します。</p>
+<!-- Usage
+- - - - -
+
+::
+
+    pg_repack [OPTION]... [DBNAME]
+
+The following options can be specified in ``OPTIONS``.
+
+Options:
+  -a, - -all                 repack all databases
+  -t, - -table=TABLE         repack specific table only
+  -c, - -schema=SCHEMA       repack tables in specific schema only
+  -s, - -tablespace=TBLSPC   move repacked tables to a new tablespace
+  -S, - -moveidx             move repacked indexes to *TBLSPC* too
+  -o, - -order-by=COLUMNS    order by columns instead of cluster keys
+  -n, - -no-order            do vacuum full instead of cluster
+  -N, - -dry-run             print what would have been repacked and exit
+  -j, - -jobs=NUM            Use this many parallel jobs for each table
+  -i, - -index=INDEX         move only the specified index
+  -x, - -only-indexes        move only indexes of the specified table
+  -T, - -wait-timeout=SECS   timeout to cancel other backends on conflict
+  -D, - -no-kill-backend     don't kill other backends when timed out
+  -Z, - -no-analyze          don't analyze at end
+  -k, - -no-superuser-check  skip superuser checks in client
+
+Connection options:
+  -d, - -dbname=DBNAME       database to connect
+  -h, - -host=HOSTNAME       database server host or socket directory
+  -p, - -port=PORT           database server port
+  -U, - -username=USERNAME   user name to connect as
+  -w, - -no-password         never prompt for password
+  -W, - -password            force password prompt
+
+Generic options:
+  -e, - -echo                echo queries
+  -E, - -elevel=LEVEL        set output message level
+  - -help                    show this help, then exit
+  - -version                 output version information, then exit -->
+</div>
+<div class="section" id="id6">
+<h2>利用方法</h2>
+<pre class="literal-block">
+pg_repack [OPTION]... [DBNAME]
+</pre>
+<p>OPTIONには以下のものが指定できます。</p>
+<dl class="docutils">
+<dt>固有オプション:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-a</span>, <span class="option">--all</span></kbd></td>
+<td>すべてのデータベースに対して実行します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-t</span>, <span class="option">--table=<var>TABLE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したテーブルに対して実行します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-c</span>, <span class="option">--schema=<var>SCHEMA</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したスキーマに存在するテーブル全てに対して実行します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-s</span>, <span class="option">--tablespace=<var>TBLSPC</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したテーブル空間に再編成後のテーブルを配置します</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-S</span>, <span class="option">--moveidx</span></kbd></td>
+<td>-s/--tablespaceで指定したテーブル空間に再編成対象のテーブルに付与されたインデックスも配置します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-o</span>, <span class="option">--order-by=<var>COLUMNS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したカラムの値順に再編成します</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span>, <span class="option">--no-order</span></kbd></td>
+<td>オンラインVACUUM FULL相当の処理を行います</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-N</span>, <span class="option">--dry-run</span></kbd></td>
+<td>実際の処理は行わず、メッセージのみだけ出力します</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-j</span>, <span class="option">--jobs=<var>NUM</var></span></kbd></td>
+<td>指定した並列度で処理を行います</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-i</span>, <span class="option">--index=<var>INDEX</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したインデックスのみ再編成します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-x</span>, <span class="option">--only-indexes</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したテーブルに付与されたインデックスだけを再編成します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-T</span>, <span class="option">--wait-timeout=<var>SECS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>ロック競合している他のトランザクションをキャンセルするまで待機する時間を指定します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-D</span>, <span class="option">--no-kill-backend</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>タイムアウト時に他のバックエンドをキャンセルしません</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-Z</span>, <span class="option">--no-analyze</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>再編成後にANALYZEを行いません</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-k</span>, <span class="option">--no-superuser-check</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>接続ユーザがスーパーユーザかどうかのチェックを行いません</td></tr>
+</tbody>
+</table>
+</dd>
+<dt>接続オプション:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-d</span>, <span class="option">--dbname=<var>DBNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>接続する対象のデータベースを指定します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-h</span>, <span class="option">--host=<var>HOSTNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>接続する対象のホスト名、もしくはUNIXソケットドメインディレクトリを指定します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-p</span>, <span class="option">--port=<var>PORT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>接続する対象のデータベース・サーバのポート番号を指定します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-U</span>, <span class="option">--username=<var>USERNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>接続するユーザ名を指定します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-w</span>, <span class="option">--no-password</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>パスワードの入力表示を無効化します</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-W</span>, <span class="option">--password</span></kbd></td>
+<td>パスワード入力表示を強制的に表示します</td></tr>
+</tbody>
+</table>
+</dd>
+<dt>一般オプション:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-e</span>, <span class="option">--echo</span></kbd></td>
+<td>サーバに送信するSQLを表示します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-E</span>, <span class="option">--elevel=<var>LEVEL</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>ログ出力レベルを指定します</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--help</span></kbd></td>
+<td>使用方法を表示します</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<!-- Reorg Options
+^^^^^^^^^^^^^ -->
+</div>
+<div class="section" id="id7">
+<h2>再編成オプション</h2>
+<!-- ``-a``, ``- -all``
+Attempt to repack all the databases of the cluster. Databases where the
+``pg_repack`` extension is not installed will be skipped. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">--all</span></tt></dt>
+<dd>データベースクラスタのすべてのデータベースを再編成します。pg_repackのエクステンションがインストールされていないデータベースはスキップされます。</dd>
+</dl>
+<!-- ``-t TABLE``, ``- -table=TABLE``
+Reorganize the specified table(s) only. Multiple tables may be
+reorganized by writing multiple ``-t`` switches. By default, all eligible
+tables in the target databases are reorganized. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-t</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--table=TABLE</span></tt></dt>
+<dd>指定したテーブルのみを再編成します。 <tt class="docutils literal"><span class="pre">-t</span></tt> オプションを複数同時に使用することで、複数のテーブルを指定することができます。このオプションを指定しない限り、対象のデータベースに存在するすべてのテーブルを再編成します。</dd>
+</dl>
+<!-- ``-c``, ``- -schema``
+Repack the tables in the specified schema(s) only. Multiple schemas may
+be repacked by writing multiple ``-c`` switches. May be used in
+conjunction with ``- -tablespace`` to move tables to a different tablespace. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-c</span></tt>, <tt class="docutils literal"><span class="pre">--schema</span></tt></dt>
+<dd>指定したスキーマに存在するテーブルを再編成します。 <tt class="docutils literal"><span class="pre">-c</span></tt> オプションを複数同時に指定することで、複数のスキーマを指定することができます。 <tt class="docutils literal"><span class="pre">--tablespace</span></tt> オプションと同時に使用することで、特定のスキーマのテーブルを別のテーブル空間に移動する利用例が挙げられます。</dd>
+</dl>
+<!-- ``-o COLUMNS [,...]``, ``- -order-by=COLUMNS [,...]``
+Perform an online CLUSTER ordered by the specified columns. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-o</span> COLUMNS <span class="pre">[,...]</span></tt>, <tt class="docutils literal"><span class="pre">--order-by=COLUMNS</span> <span class="pre">[,...]</span></tt></dt>
+<dd>指定したカラムの値を用いてオンラインCLUSTER処理を実行します。</dd>
+</dl>
+<!-- ``-n``, ``- -no-order``
+Perform an online VACUUM FULL.  Since version 1.2 this is the default for
+non-clustered tables. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
+<dd>オンラインVACUUM FULL処理を実行します。バージョン1.2から、クラスタキーのないテーブルに対してはこれがデフォルトの挙動になっています。</dd>
+</dl>
+<!-- ``-N``, ``- -dry-run``
+List what would be repacked and exit. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-N</span></tt>, <tt class="docutils literal"><span class="pre">--dry-run</span></tt></dt>
+<dd>実際の処理は実行せずに、実施する内容についてのメッセージだけを出力します。</dd>
+</dl>
+<!-- ``-j``, ``- -jobs``
+Create the specified number of extra connections to PostgreSQL, and
+use these extra connections to parallelize the rebuild of indexes
+on each table. Parallel index builds are only supported for full-table
+repacks, not with ``- -index`` or ``- -only-indexes`` options. If your
+PostgreSQL server has extra cores and disk I/O available, this can be a
+useful way to speed up pg_repack. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-j</span></tt>, <tt class="docutils literal"><span class="pre">--jobs</span></tt></dt>
+<dd>指定した数だけ追加でPostgreSQLへのコネクションを作成し、それらのコネクションを使って並列でインデックス作成処理を行います。並列でのインデックス作成は、テーブル全体を再編成する場合にのみ有効です。 <tt class="docutils literal"><span class="pre">--index</span></tt> や <tt class="docutils literal"><span class="pre">--only-indexes</span></tt> オプションとは同時に利用できません。PostgreSQLサーバのCPUコア数およびディスクI/Oに余裕がある場合には、このオプションを利用することでpg_repackの処理を高速化するための有力な手段になりえます。</dd>
+</dl>
+<!-- ``-s TBLSPC``, ``- -tablespace=TBLSPC``
+Move the repacked tables to the specified tablespace: essentially an
+online version of ``ALTER TABLE ... SET TABLESPACE``. The tables' indexes
+are left in the original tablespace unless ``- -moveidx`` is specified too. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-s</span> TBLSPC</tt>, <tt class="docutils literal"><span class="pre">--tablespace=TBLSPC</span></tt></dt>
+<dd>再編成したテーブルを指定したテーブル空間に移動します。即ち、 <tt class="docutils literal">ALTER TABLE ... SET TABLESPACE</tt> 相当の処理をオンラインで実施します。 <tt class="docutils literal"><span class="pre">--moveidx</span></tt> オプションを併用しない限り、再編成したテーブルのインデックスは元のテーブル空間に残されます。</dd>
+</dl>
+<!-- ``-S``, ``- -moveidx``
+Also move the indexes of the repacked tables to the tablespace specified
+by the ``- -tablespace`` option. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-S</span></tt>, <tt class="docutils literal"><span class="pre">--moveidx</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">--tablespace</span></tt> オプションと併用することで、再編成したテーブルのインデックスも指定したテーブル空間に移動します。</dd>
+</dl>
+<!-- ``-i``, ``- -index``
+Repack the specified index(es) only. Multiple indexes may be repacked
+by writing multiple ``-i`` switches. May be used in conjunction with
+``- -tablespace`` to move the index to a different tablespace. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-i</span></tt>, <tt class="docutils literal"><span class="pre">--index</span></tt></dt>
+<dd>指定したインデックスのみを再編成します。 <tt class="docutils literal"><span class="pre">-i</span></tt> オプションを複数同時に指定することで、複数のインデックスを指定することができます。 <tt class="docutils literal"><span class="pre">--tablespace</span></tt> オプションと同時に使用することで、特定のスキーマのテーブルを別のテーブル空間に移動する利用例が挙げられます。</dd>
+</dl>
+<!-- ``-x``, ``- -only-indexes``
+Repack only the indexes of the specified table(s), which must be specified
+with the ``- -table`` option. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-x</span></tt>, <tt class="docutils literal"><span class="pre">--only-indexes</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">--table</span></tt> オプションと併用することで、指定したテーブルのインデックスのみを再編成します。</dd>
+</dl>
+<!-- ``-T SECS``, ``- -wait-timeout=SECS``
+pg_repack needs to take an exclusive lock at the end of the
+reorganization.  This setting controls how many seconds pg_repack will
+wait to acquire this lock. If the lock cannot be taken after this duration
+and ``- -no-kill-backend`` option is not specified, pg_repack will forcibly
+cancel the conflicting queries. If you are using PostgreSQL version 8.4
+or newer, pg_repack will fall back to using pg_terminate_backend() to
+disconnect any remaining backends after twice this timeout has passed.
+The default is 60 seconds. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
+<dd>pg_repackは再編成の完了直前に排他ロックを利用します。このオプションは、このロック取得時に何秒間pg_repackが取得を待機するかを指定します。指定した時間経ってもロックが取得できないかつ、<tt class="docutils literal"><span class="pre">no-kill-backend</span></tt>オプションが指定されていない場合、pg_repackは競合するクエリを強制的にキャンセルさせます。PostgreSQL 8.4以上のバージョンを利用している場合、指定した時間の2倍以上経ってもロックが取得できない場合、pg_repackは競合するクエリを実行しているPostgreSQLバックエンドプロセスをpg_terminate_backend()関数により強制的に停止させます。このオプションのデフォルトは60秒です。</dd>
+</dl>
+<!-- ``-D``, ``- -no-kill-backend``
+Skip to repack table if the lock cannot be taken for duration specified
+``- -wait-timeout``, instead of cancelling conflicting queries. The default
+is false. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-D</span></tt>, <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">--wait-timeout</span></tt>オプションで指定された時間が経過してもロックが取得できない場合、競合するクエリをキャンセルする代わりに対象テーブルの再編成をスキップします。</dd>
+</dl>
+<!-- ``-Z``, ``- -no-analyze``
+Disable ANALYZE after a full-table reorganization. If not specified, run
+ANALYZE after the reorganization. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-Z</span></tt>, <tt class="docutils literal"><span class="pre">--no-analyze</span></tt></dt>
+<dd>再編成終了後にANALYZEを行うことを無効にします。デフォルトでは再編成完了後に統計情報を更新するためANALYZEを実行します。</dd>
+</dl>
+<!-- ``-k``, ``- -no-superuser-check``
+Skip the superuser checks in the client. This setting is useful for using
+pg_repack on platforms that support running it as non-superusers. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-k</span></tt>, <tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt></dt>
+<dd>接続ユーザがスーパーユーザかどうかのチェックを行いません。これは、非スーパーユーザのみが利用できる環境でpg_repackを使用するときに有用です。</dd>
+</dl>
+<!-- Connection Options
+ ^^^^^^^^^^^^^^^^^^
+Options to connect to servers. You cannot use ``- -all`` and ``- -dbname`` or
+``- -table`` together. -->
+</div>
+<div class="section" id="id8">
+<h2>接続オプション</h2>
+<p>PostgreSQLサーバに接続するためのオプションです。
+<tt class="docutils literal"><span class="pre">--all</span></tt> オプションと同時に <tt class="docutils literal"><span class="pre">--dbname</span></tt> や <tt class="docutils literal"><span class="pre">--table</span></tt> を利用することはできません。</p>
+<!-- ``-a``, ``- -all``
+Reorganize all databases. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">--all</span></tt></dt>
+<dd>すべてのデータベースを再編成します。</dd>
+</dl>
+<!-- ``-d DBNAME``, ``- -dbname=DBNAME``
+Specifies the name of the database to be reorganized. If this is not
+specified and ``-a`` (or ``- -all``) is not used, the database name is read
+from the environment variable PGDATABASE. If that is not set, the user
+name specified for the connection is used. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-d</span> DBNAME</tt>, <tt class="docutils literal"><span class="pre">--dbname=DBNAME</span></tt></dt>
+<dd>指定したデータベースのみを再編成します。このオプションや <tt class="docutils literal"><span class="pre">-a</span></tt> ( <tt class="docutils literal"><span class="pre">--all</span></tt> )オプションを指定しなかった場合、環境変数PGDATABASEで指定されたデータベースを再編成します。PGDATABASEも指定されていない場合、接続に利用するユーザ名と同じ名称のデータベースを再編成します。</dd>
+</dl>
+<!-- ``-h HOSTNAME``, ``- -host=HOSTNAME``
+Specifies the host name of the machine on which the server is running. If
+the value begins with a slash, it is used as the directory for the Unix
+domain socket. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-h</span> HOSTNAME</tt>, <tt class="docutils literal"><span class="pre">--host=HOSTNAME</span></tt></dt>
+<dd>指定したホスト名を持つサーバ上のPostgreSQLに接続します。指定した値が <tt class="docutils literal">/</tt> で始まる場合、Unixドメインソケットが配置されたディレクトリと解釈して接続します。</dd>
+</dl>
+<!-- ``-p PORT``, ``- -port=PORT``
+Specifies the TCP port or local Unix domain socket file extension on which
+the server is listening for connections. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-p</span> PORT</tt>, <tt class="docutils literal"><span class="pre">--port=PORT</span></tt></dt>
+<dd>指定したポート番号でPostgreSQLサーバに接続します。</dd>
+</dl>
+<!-- ``-U USERNAME``, ``- -username=USERNAME``
+User name to connect as. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-U</span> USERNAME</tt>, <tt class="docutils literal"><span class="pre">--username=USERNAME</span></tt></dt>
+<dd>指定したユーザ名でPostgreSQLサーバに接続します。</dd>
+</dl>
+<!-- ``-w``, ``- -no-password``
+Never issue a password prompt. If the server requires password
+authentication and a password is not available by other means such as a
+``.pgpass`` file, the connection attempt will fail. This option can be
+useful in batch jobs and scripts where no user is present to enter a
+password. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-w</span></tt>, <tt class="docutils literal"><span class="pre">--no-password</span></tt></dt>
+<dd>接続時にパスワード入力プロンプトを表示されないようにします。もし接続先のPostgreSQLサーバがパスワード認証を要求していて、パスワードが``.pgpass``ファイルなどの手段で取得できない場合、pg_repackは接続に失敗します。このオプションはパスワード入力なしで接続できるユーザを用いたバッチ処理やスクリプトにて利用します。</dd>
+</dl>
+<!-- ``-W``, ``- -password``
+Force the program to prompt for a password before connecting to a
+database.
+
+This option is never essential, since the program will automatically
+prompt for a password if the server demands password authentication.
+However, pg_repack will waste a connection attempt finding out that the
+server wants a password. In some cases it is worth typing ``-W`` to avoid
+the extra connection attempt. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-W</span></tt>, <tt class="docutils literal"><span class="pre">--password</span></tt></dt>
+<dd>接続時にパスワード入力プロンプトを強制的に表示します。
+サーバがパスワード認証を要求する場合、そもそも自動的にパスワード入力が促されるため、このオプションが重要になることはありません。
+しかし、サーバにパスワードが必要かどうかを判断するための接続試行を無駄に行います。
+こうした余計な接続試行を防ぎたいのであれば、このオプションが利用してください。</dd>
+</dl>
+<!-- Generic Options
+^^^^^^^^^^^^^^^ -->
+</div>
+<div class="section" id="id9">
+<h2>一般オプション</h2>
+<!-- ``-e``, ``- -echo``
+Echo commands sent to server. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-e</span></tt>, <tt class="docutils literal"><span class="pre">--echo</span></tt></dt>
+<dd>サーバに送信するSQLを表示します。</dd>
+</dl>
+<!-- ``-E LEVEL``, ``- -elevel=LEVEL``
+Choose the output message level from ``DEBUG``, ``INFO``, ``NOTICE``,
+``WARNING``, ``ERROR``, ``LOG``, ``FATAL``, and ``PANIC``. The default is
+``INFO``. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-E</span> LEVEL</tt>, <tt class="docutils literal"><span class="pre">--elevel=LEVEL</span></tt></dt>
+<dd>ログ出力レベルを設定します。 <tt class="docutils literal">DEBUG</tt>, <tt class="docutils literal">INFO</tt>. <tt class="docutils literal">NOTICE</tt>, <tt class="docutils literal">WARNING</tt>, <tt class="docutils literal">ERROR</tt>, <tt class="docutils literal">LOG</tt>, <tt class="docutils literal">FATAL</tt>, <tt class="docutils literal">PANIC</tt> から選択できます。デフォルトは <tt class="docutils literal">INFO</tt> です。</dd>
+</dl>
+<!-- ``- -help``
+Show usage of the program. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">--help</span></tt></dt>
+<dd>利用方法についての説明を表示します。</dd>
+</dl>
+<!-- ``- -version``
+Show the version number of the program. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">--version</span></tt></dt>
+<dd>バージョン情報を表示します。</dd>
+</dl>
+<!-- Environment
+- - - - - - - - - - -
+
+``PGDATABASE``, ``PGHOST``, ``PGPORT``, ``PGUSER``
+    Default connection parameters
+
+    This utility, like most other PostgreSQL utilities, also uses the
+    environment variables supported by libpq (see `Environment Variables`__).
+
+    .. __: http://www.postgresql.jp/document/current/html/libpq-envars.html -->
+</div>
+<div class="section" id="id10">
+<h2>環境変数</h2>
+<dl class="docutils">
+<dt><tt class="docutils literal">PGDATABASE</tt>, <tt class="docutils literal">PGHOST</tt>, <tt class="docutils literal">PGPORT</tt>, <tt class="docutils literal">PGUSER</tt></dt>
+<dd>接続パラメータのデフォルト値として利用されます。</dd>
+</dl>
+<p>　　また、このユーティリティは、他のほとんどの PostgreSQL ユーティリティと同様、libpq でサポートされる環境変数を使用します。詳細については、 <a class="reference external" href="http://www.postgresql.jp/document/current/html/libpq-envars.html">環境変数</a>  の項目を参照してください。</p>
+<blockquote>
+</blockquote>
+<!-- Examples
+- - - - - - - -
+
+Perform an online CLUSTER of all the clustered tables in the database
+``test``, and perform an online VACUUM FULL of all the non-clustered tables::
+
+    $ pg_repack test
+
+Perform an online VACUUM FULL on the tables ``foo`` and ``bar`` in the
+database ``test`` (an eventual cluster index is ignored)::
+
+    $ pg_repack - -no-order - -table foo - -table bar test
+
+Move all indexes of table ``foo`` to tablespace ``tbs``::
+
+    $ pg_repack -d test - -table foo - -only-indexes - -tablespace tbs
+
+Move the specified index to tablespace ``tbs``::
+
+    $ pg_repack -d test - -index idx - -tablespace tbs -->
+</div>
+<div class="section" id="id12">
+<h2>利用例</h2>
+<p>以下のコマンドは、 <tt class="docutils literal">test</tt> データベースのクラスタ可能なテーブル全てに対してオンラインCLUSTERを行い、その他のテーブルに対してオンラインVACUUM FULLを行います。:</p>
+<pre class="literal-block">
+$ pg_repack test
+</pre>
+<p><tt class="docutils literal">test</tt> データベースの <tt class="docutils literal">foo</tt> テーブルと <tt class="docutils literal">bar</tt> テーブルに対してオンラインVACUUM FULLを実行するには、以下のようにします。</p>
+<pre class="literal-block">
+$ pg_repack --no-order --table foo --table bar test
+</pre>
+<p><tt class="docutils literal">foo</tt> テーブルのインデックス全てをテーブル空間 <tt class="docutils literal">tbs</tt> に移動するには、以下のようにします。</p>
+<pre class="literal-block">
+$ pg_repack -d test --table foo --only-indexes --tablespace tbs
+</pre>
+<p>インデックス <tt class="docutils literal">idx</tt> をテーブル空間 <tt class="docutils literal">tbs</tt> に移動するには、以下のようにします。</p>
+<pre class="literal-block">
+$ pg_repack -d test --index idx --tablespace tbs
+</pre>
+<!-- Diagnostics
+- - - - - - - - - - - -->
+</div>
+<div class="section" id="id13">
+<h2>トラブルシューティング</h2>
+<!-- Error messages are reported when pg_repack fails. The following list shows the
+cause of errors.
+
+You need to cleanup by hand after fatal errors. To cleanup, just remove
+pg_repack from the database and install it again: for PostgreSQL 9.1 and
+following execute ``DROP EXTENSION pg_repack CASCADE`` in the database where
+the error occurred, followed by ``CREATE EXTENSION pg_repack``; for previous
+version load the script ``$SHAREDIR/contrib/uninstall_pg_repack.sql`` into the
+database where the error occured and then load
+``$SHAREDIR/contrib/pg_repack.sql`` again. -->
+<p>pg_repackが失敗した場合、エラーメッセージが表示されます。
+エラーの原因について以下に列記します。</p>
+<p>FATALエラーが発生した場合、手動でクリーンアップを行う必要があります。
+クリーンアップするには、pg_repackをデータベースから一度削除し、再度登録するだけです。
+PostgreSQL 9.1以降では、 <tt class="docutils literal">DROP EXTENSION pg_repack CASCADE</tt> をエラーが起きた
+データベースで実行し、続いて <tt class="docutils literal">CREATE EXTENSION pg_repack</tt> を実行します。
+これより古いバージョンの場合、 <tt class="docutils literal">$SHAREDIR/contrib/uninstall_pg_repack.sql</tt>
+スクリプトをエラーが起きたデータベースに対して実行し、その後
+<tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> を同様に実行します。</p>
+<!-- INFO: database "db" skipped: pg_repack VER is not installed in the database
+pg_repack is not installed in the database when the ``- -all`` option is
+specified.
+
+Create the pg_repack extension in the database. -->
+<dl class="diag docutils">
+<dt>INFO: database &quot;db&quot; skipped: pg_repack VER is not installed in the database</dt>
+<dd><p class="first"><tt class="docutils literal"><span class="pre">--all</span></tt> オプション指定時に、pg_repackがインストールされていない
+データベースに対して表示されます。</p>
+<p class="last">該当のデータベースに対してpg_repackをインストールしてください。</p>
+</dd>
+</dl>
+<!-- ERROR: pg_repack VER is not installed in the database
+pg_repack is not installed in the database specified by ``- -dbname``.
+
+Create the pg_repack extension in the database. -->
+<dl class="diag docutils">
+<dt>ERROR: pg_repack VER is not installed in the database</dt>
+<dd><p class="first"><tt class="docutils literal"><span class="pre">--dbname</span></tt> オプション指定時に、指定したデータベースにpg_repackが
+インストールされていない場合に表示されます。</p>
+<p class="last">該当のデータベースに対してpg_repackをインストールしてください。</p>
+</dd>
+</dl>
+<!-- ERROR: program 'pg_repack V1' does not match database library 'pg_repack V2'
+There is a mismatch between the ``pg_repack`` binary and the database
+library (``.so`` or ``.dll``).
+
+The mismatch could be due to the wrong binary in the ``$PATH`` or the
+wrong database being addressed. Check the program directory and the
+database; if they are what expected you may need to repeat pg_repack
+installation. -->
+<dl class="diag docutils">
+<dt>ERROR: program 'pg_repack V1' does not match database library 'pg_repack V2'</dt>
+<dd><p class="first">There is a mismatch between the <tt class="docutils literal">pg_repack</tt> binary and the database
+library (<tt class="docutils literal">.so</tt> or <tt class="docutils literal">.dll</tt>).</p>
+<p class="last">データベースに登録されたpg_repackがバージョン2系であるのに、クライアント側
+コマンドのpg_repackのバージョンが1系である場合に表示されます。
+<tt class="docutils literal">$PATH</tt> に誤ったpg_repackのバイナリを指定していたり、接続先のデータベースが
+間違っている可能性があります。pg_repackプログラムがインストールされた
+ディレクトリとデータベースを確認してください。それらが適切である場合、
+pg_repackを再インストールしてください。</p>
+</dd>
+</dl>
+<!-- ERROR: extension 'pg_repack V1' required, found extension 'pg_repack V2'
+The SQL extension found in the database does not match the version
+required by the pg_repack program.
+
+You should drop the extension from the database and reload it as described
+in the installation_ section. -->
+<dl class="diag docutils">
+<dt>ERROR: extension 'pg_repack V1' required, found extension 'pg_repack V2'</dt>
+<dd>クライアント側のpg_repackがバージョン1系であるのに、データベース側に
+登録されたpg_repackがバージョン2系の場合に表示されます。
+当該データベースからpg_repackを削除し、 <a class="reference internal" href="#id5">インストール</a> に従って
+再登録してください。</dd>
+</dl>
+<!-- ERROR: relation "table" must have a primary key or not-null unique keys
+The target table doesn't have a PRIMARY KEY or any UNIQUE constraints
+defined.
+
+Define a PRIMARY KEY or a UNIQUE constraint on the table. -->
+<dl class="diag docutils">
+<dt>ERROR: relation &quot;table&quot; must have a primary key or not-null unique keys</dt>
+<dd>対象のテーブルが主キーもしくはNOT NULLなユニーク制約を持っていない場合に表示されます。
+主キーもしくはユニーク制約を定義してください。</dd>
+</dl>
+<!-- ERROR: query failed: ERROR: column "col" does not exist
+The target table doesn't have columns specified by ``- -order-by`` option.
+
+Specify existing columns. -->
+<dl class="diag docutils">
+<dt>ERROR: query failed: ERROR: column &quot;col&quot; does not exist</dt>
+<dd>対象のテーブルが  <tt class="docutils literal"><span class="pre">--order-by</span></tt> オプションで指定したカラムを持っていない場合に表示されます。
+存在しているカラムを指定してください。</dd>
+</dl>
+<!-- WARNING: the table "tbl" already has a trigger called a_repack_trigger
+The trigger was probably installed during a previous attempt to run
+pg_repack on the table which was interrupted and for some reason failed
+to clean up the temporary objects.
+
+You can remove all the temporary objects by dropping and re-creating the
+extension: see the installation_ section for the details. -->
+<dl class="diag docutils">
+<dt>WARNING: the table &quot;tbl&quot; already has a trigger called repack_trigger</dt>
+<dd>以前に実行したが何らかの理由で中断したか、あるいは失敗したpg_repackコマンドにより、
+対象テーブルにpg_repackが利用するトリガが残存している場合に表示されます。
+pg_repackを一度削除して、再度登録することで、こうした一時オブジェクトを削除できます。
+<a class="reference internal" href="#id5">インストール</a> を参照してください。</dd>
+</dl>
+<!-- WARNING: trigger "trg" conflicting on table "tbl"
+The target table has a trigger whose name follows ``repack_trigger``
+in alphabetical order.
+
+The ``repack_trigger`` should be the first AFTER trigger to fire.
+Please rename your trigger so that it sorts alphabetically before
+pg_repack's one; you can use::
+
+    ALTER TRIGGER aaa_my_trigger ON sometable RENAME TO bbb_my_trigger; -->
+<dl class="diag docutils">
+<dt>ERROR: Another pg_repack command may be running on the table. Please try again</dt>
+<dd>同じテーブルに複数のpg_repackが同時に実行されている場合に表示されます。
+これはデッドロックを引き起こす可能性があるため、片方のpg_repackが終了するのを
+待って再度実行してください。</dd>
+</dl>
+<!-- WARNING: Cannot create index  "schema"."index_xxxxx", already exists
+DETAIL: An invalid index may have been left behind by a previous pg_repack on
+the table which was interrupted. Please use DROP INDEX "schema"."index_xxxxx"
+to remove this index and try again.
+
+ A temporary index apparently created by pg_repack has been left behind, and
+ we do not want to risk dropping this index ourselves. If the index was in
+ fact created by an old pg_repack job which didn't get cleaned up, you
+ should just use DROP INDEX and try the repack command again. -->
+<p class="diag">WARNING: Cannot create index  &quot;schema&quot;.&quot;index_xxxxx&quot;, already exists
+DETAIL: An invalid index may have been left behind by a previous pg_repack
+on the table which was interrupted. Please use DROP INDEX &quot;schema&quot;.&quot;index_xxxxx&quot;
+to remove this index and try again.</p>
+<blockquote>
+以前に実行したが何らかの理由で中断したか、あるいは失敗したpg_repackコマンドにより、
+pg_repackが利用する一時的なインデックスが残存している場合に表示されます。
+DROP INDEXコマンドにより該当のインデックスを削除して、pg_repackを再実行してください。</blockquote>
+<!-- Restrictions
+- - - - - - - - - - - -
+
+pg_repack comes with the following restrictions. -->
+</div>
+<div class="section" id="id14">
+<h2>制約</h2>
+<p>pg_repackには以下の制約があります。</p>
+<!-- Temp tables
+^^^^^^^^^^^
+
+pg_repack cannot reorganize temp tables. -->
+<div class="section" id="id15">
+<h3>一時テーブル</h3>
+<p>pg_repackは一時テーブルは再編成できません。</p>
+<!-- GiST indexes
+^^^^^^^^^^^^
+
+pg_repack cannot reorganize tables using GiST indexes. -->
+</div>
+<div class="section" id="gist">
+<h3>GiSTインデックス</h3>
+<p>pg_repackはGiSTインデックスを使ってテーブルを再編成することはできません。</p>
+<!-- DDL commands
+^^^^^^^^^^^^
+
+You will not be able to perform DDL commands of the target table(s) **except**
+VACUUM or ANALYZE while pg_repack is working. pg_repack will hold an
+ACCESS SHARE lock on the target table during a full-table repack, to enforce
+this restriction.
+
+If you are using version 1.1.8 or earlier, you must not attempt to perform any
+DDL commands on the target table(s) while pg_repack is running. In many cases
+pg_repack would fail and rollback correctly, but there were some cases in these
+earlier versions which could result in data corruption. -->
+</div>
+<div class="section" id="ddl">
+<h3>DDLコマンド</h3>
+<p>pg_repackを実行している間、VACUUMもしくはANALYZE以外のDDLコマンドを対象の
+テーブルに対して実行することはできません。何故ならば、pg_repackは
+ACCESS SHAREロックを対象テーブルに対して保持しつづけるからです。</p>
+<p>バージョン1.1.8もしくはそれ以前のバージョンを使っている場合、あらゆるDDL
+コマンドをpg_repackが走っているテーブルに対して実行することができません。
+大抵はpg_repackが失敗してロールバックが適切に行われますが、古いバージョンでは
+いくつかのケースでデータ不整合を引き起こす可能性があります。</p>
+<!-- Details
+- - - - - - - -->
+</div>
+</div>
+<div class="section" id="id16">
+<h2>動作詳細</h2>
+<!-- Full Table Repacks
+^^^^^^^^^^^^^^^^^^
+
+To perform a full-table repack, pg_repack will:
+
+1. create a log table to record changes made to the original table
+2. add a trigger onto the original table, logging INSERTs, UPDATEs and DELETEs into our log table
+3. create a new table containing all the rows in the old table
+4. build indexes on this new table
+5. apply all changes which have accrued in the log table to the new table
+6. swap the tables, including indexes and toast tables, using the system catalogs
+7. drop the original table
+
+pg_repack will only hold an ACCESS EXCLUSIVE lock for a short period during
+initial setup (steps 1 and 2 above) and during the final swap-and-drop phase
+(steps 6 and 7). For the rest of its time, pg_repack only needs
+to hold an ACCESS SHARE lock on the original table, meaning INSERTs, UPDATEs,
+and DELETEs may proceed as usual. -->
+<div class="section" id="id17">
+<h3>テーブル再編成</h3>
+<p>テーブル全体を再編成する場合、pg_repackは以下のように動作します:</p>
+<ol class="arabic simple">
+<li>対象のテーブルに対して実行される変更を記録するためのログテーブルを作成します</li>
+<li>対象のテーブルに、INSERT、UPDATE、DELETEが行われた際にログテーブルに変更内容を記録するトリガを追加します</li>
+<li>対象テーブルに含まれるレコードを元に、新しいテーブルを指定した編成順でレコードを並ばせながら作成します</li>
+<li>新しいテーブルに対してインデックスを作成します</li>
+<li>再編成中に行われた元のテーブルに対する変更内容をログテーブルから取り出し、新しいテーブルに反映します</li>
+<li>システムカタログを更新し、元のテーブルと新しいテーブルを入れ替えます。インデックスやトーストテーブルも入れ替えます</li>
+<li>元のテーブルを削除します</li>
+</ol>
+<p>pg_repackは上の手順の中で、始めの1.と2.の時点、および最後の6.と7.の時点で対象のテーブルに対する
+ACCESS EXCLUSIVEロックを取得します。その他のステップでは、ACCESS SHAREロックを必要とするだけなので、
+元のテーブルに対するINSERT, UPDATE, DELETE操作は通常通りに実行されます。</p>
+<!-- Index Only Repacks
+^^^^^^^^^^^^^^^^^^
+
+To perform an index-only repack, pg_repack will:
+
+1. create new indexes on the table using CONCURRENTLY matching the definitions of the old indexes
+2. swap out the old for the new indexes in the catalogs
+3. drop the old indexes
+
+Creating indexes concurrently comes with a few caveats, please see `the documentation`__ for details.
+
+    .. __: http://www.postgresql.jp/document/current/html/sql-createindex.html#SQL-CREATEINDEX-CONCURRENTLY -->
+</div>
+<div class="section" id="id18">
+<h3>インデックスのみの再編成</h3>
+<p>インデックスのみ再編成する場合、pg_repackは以下のように動作します:</p>
+<ol class="arabic simple">
+<li>元のインデックス定義に添って、新しいインデックスをCONCURRENTLYオプションを利用して作成します</li>
+<li>システムカタログを更新し、元のインデックスと新しいインデックスを入れ替えます</li>
+<li>元のインデックスを削除します</li>
+</ol>
+<p>インデックス作成のCONCURRENTLYオプションにはいくつかの注意点があります。
+詳細は、 <a class="reference external" href="http://www.postgresql.jp/document/current/html/sql-createindex.html#SQL-CREATEINDEX-CONCURRENTLY">PostgreSQLドキュメント</a> を参照してください。</p>
+<blockquote>
+</blockquote>
+<!-- Releases
+- - - - - - - - -->
+</div>
+</div>
+<div class="section" id="id20">
+<h2>リリースノート</h2>
+<!-- * pg_repack 1.4 -->
+<!-- * added support for PostgreSQL 9.6 -->
+<!-- * use ``AFTER`` trigger to solve concurrency problems with ``INSERT -->
+<!-- CONFLICT`` (issue #106) -->
+<!-- * added ``- -no-kill-backend`` option (issue #108) -->
+<!-- * added ``- -no-superuser-check`` option (issue #114) -->
+<!-- * added ``- -exclude-extension`` option (#97) -->
+<ul class="simple">
+<li>pg_repack 1.4<ul>
+<li>PostgreSQL 9.6をサポートしました</li>
+<li><tt class="docutils literal">INSERT CONFLICT</tt> を同時実行した際の問題を解決するために、
+<tt class="docutils literal">AFTER</tt> トリガを使うようにしました(issue #106)</li>
+<li><tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> オプションを追加しました (issue #108)</li>
+<li><tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt> オプションを追加しました (issue #114)</li>
+<li><tt class="docutils literal"><span class="pre">--exclude-extension</span></tt> オプションを追加しました (#97)</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.3.4 -->
+<!-- * grab exclusive lock before dropping original table (#81) -->
+<!-- * do not attempt to repack unlogged table (#71) -->
+<ul class="simple">
+<li>pg_repack 1.3.4<ul>
+<li>元テーブルを削除する前に排他ロックを取得するようにしました(#81)</li>
+<li>Unlogged Tableを再編成対象から外すようにしました (#71)</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.3.3 -->
+<!-- * Added support for PostgreSQL 9.5 -->
+<!-- * Fixed possible deadlock when pg_repack command is interrupted (issue #55) -->
+<!-- * Fixed exit code for when pg_repack is invoked with ``- -help`` and -->
+<!-- ``- -version`` -->
+<!-- * Added Japanese language user manual -->
+<ul class="simple">
+<li>pg_repack 1.3.3<ul>
+<li>PostgreSQL 9.5をサポートしました</li>
+<li>pg_repackが中断されたときにデッドロックが発生する可能性を修正しました (issue #55)</li>
+<li><tt class="docutils literal"><span class="pre">--help</span></tt> または <tt class="docutils literal"><span class="pre">--version</span></tt> オプションを指定した実行したときの終了コードを修正しました</li>
+<li>日本語のユーザマニュアルを追加しました</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.3.2 -->
+<!-- * Fixed to clean up temporary objects when pg_repack command is interrupted. -->
+<!-- * Fixed possible crash when pg_repack shared library is loaded a alongside -->
+<!-- pg_statsinfo (issue #43) -->
+<ul class="simple">
+<li>pg_repack 1.3.2<ul>
+<li>pg_repackが中断されたときに一時オブジェクトを削除するようにしました</li>
+<li>pg_statsinfoと同時にロードされている時にクラッシュする可能性を修正しました</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.3.1 -->
+<!-- * Added support for PostgreSQL 9.4. -->
+<ul class="simple">
+<li>pg_repack 1.3.1<ul>
+<li>PostgreSQL 9.4をサポートしました</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.3 -->
+<!-- * Added ``- -schema`` to repack only the specified schema (issue #20). -->
+<!-- * Added ``- -dry-run`` to do a dry run (issue #21). -->
+<!-- * Fixed advisory locking for >2B OID values (issue #30). -->
+<!-- * Avoid possible deadlock when other sessions lock a to-be-repacked
+table (issue #32). -->
+<!-- * Performance improvement for performing sql_pop DELETEs many-at-a-time. -->
+<!-- * Attempt to avoid pg_repack taking forever when dealing with a
+constant heavy stream of changes to a table. -->
+<ul class="simple">
+<li>pg_repack 1.3<ul>
+<li>特定のスキーマのみを再編成対象とする <tt class="docutils literal"><span class="pre">--schema</span></tt> オプションを追加しました ( issue #20)</li>
+<li>ドライランのための <tt class="docutils literal"><span class="pre">--dry-run</span></tt> オプションを追加しました (issue #21)</li>
+<li>勧告的ロックを取得する際のOIDの扱いを修正しました (issue #30)</li>
+<li>再編成予定のテーブルに対して別のセッションたロックを保持している場合にデッドロックが起きないように修正しました (issue #32)</li>
+<li>一度に複数のDELETE操作をsql_popで取り扱う際の性能を改善しました</li>
+<li>常に高負荷の更新が行われているテーブルに対する再編成処理が終わらない事象が起きないように修正しました</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.2
+
+* Support PostgreSQL 9.3.
+* Added ``- -tablespace`` and ``- -moveidx`` options to perform online
+  SET TABLESPACE.
+* Added ``- -index`` to repack the specified index only.
+* Added ``- -only-indexes`` to repack only the indexes of the specified table
+* Added ``- -jobs`` option for parallel operation.
+* Don't require ``- -no-order`` to perform a VACUUM FULL on non-clustered
+  tables (pg_repack issue #6).
+* Don't wait for locks held in other databases (pg_repack issue #11).
+* Bugfix: correctly handle key indexes with options such as DESC, NULL
+  FIRST/LAST, COLLATE (pg_repack issue #3).
+* Fixed data corruption bug on delete (pg_repack issue #23).
+* More helpful program output and error messages. -->
+<ul class="simple">
+<li>pg_repack 1.2<ul>
+<li>PostgreSQL 9.3をサポートしました</li>
+<li>オンラインSET TABLESPACE文に相当する処理を行うためのオプション <tt class="docutils literal"><span class="pre">--tablespace</span></tt>,  <tt class="docutils literal"><span class="pre">--moveidx</span></tt> を追加しました</li>
+<li>特定のインデックスのみを再編成するためのオプション <tt class="docutils literal"><span class="pre">--index</span></tt> を追加しました</li>
+<li>特定のテーブルのインデックスをまとめて再編成するオプション <tt class="docutils literal"><span class="pre">--only-indexes</span></tt> を追加しました</li>
+<li>並列実行のためのオプション <tt class="docutils literal"><span class="pre">--jobs</span></tt> を追加しました</li>
+<li>クラスタキーを持たないテーブルに対してVACUUM FULL相当の処理を行うために <tt class="docutils literal"><span class="pre">--no-order</span></tt> オプションを明示的に指定しなくてもよいようにしました (pg_repack issue #6)</li>
+<li>他のデータベースにおけるロックを待たないようにしました (pg_repack issue #11)</li>
+<li>バグ修正: DESC, NULL FIRST/LAST, COLLATEを持つインデックスキーを正しく取り扱えるように修正しました (pg_repack issue #3)</li>
+<li>同時に行われる削除操作によってデータ破壊が起こる可能性があったため修正しました (pg_repack issue #23)</li>
+<li>出力メッセージとエラーメッセージを改善しました</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_repack 1.1.8
+
+* Added support for PostgreSQL 9.2.
+* Added support for CREATE EXTENSION on PostgreSQL 9.1 and following.
+* Give user feedback while waiting for transactions to finish  (pg_reorg
+  issue #5).
+* Bugfix: Allow running on newly promoted streaming replication slaves
+  (pg_reorg issue #1).
+* Bugfix: Fix interaction between pg_repack and Slony 2.0/2.1 (pg_reorg
+  issue #4)
+* Bugfix: Properly escape column names (pg_reorg issue #6).
+* Bugfix: Avoid recreating invalid indexes, or choosing them as key
+  (pg_reorg issue #9).
+* Bugfix: Never choose a partial index as primary key (pg_reorg issue #22). -->
+<ul class="simple">
+<li>pg_repack 1.1.8<ul>
+<li>PostgreSQL 9.2をサポートしました</li>
+<li>PostgreSQL 9.1およびそれ以降のバージョンでCREATE EXTENSIONによるインストールが行えるようにしました</li>
+<li>他のトランザクションの終了を待っていることをユーザに通知するようにしました (pg_reorg issue #5)</li>
+<li>バグ修正: ストリーミングレプリケーション構成において、新たにマスタに昇格したサーバ上で動作するように修正しました (pg_reorg issue #1)</li>
+<li>バグ修正: pg_repackとSlony 2.0/2.1が競合しないように修正しました (pg_reorg issue #4)</li>
+<li>バグ修正: カラム名を適切にエスケープするように修正しました (pg_reorg issue #6)</li>
+<li>バグ修正: invalidなインデックスを再編成の対象としたり、クラスタキーとして扱うことがないように修正しました (pg_reorg issue #9)</li>
+<li>バグ修正: 部分インデックスを主キーとして選択しないように修正しました (pg_reorg issue #22)</li>
+</ul>
+</li>
+</ul>
+<!-- * pg_reorg 1.1.7 (2011-08-07)
+
+* Bugfix: VIEWs and FUNCTIONs could be corrupted that used a reorganized
+  table which has a dropped column.
+* Supports PostgreSQL 9.1 and 9.2dev. (but EXTENSION is not yet) -->
+<ul class="simple">
+<li>pg_reorg 1.1.7 (2011-08-07)<ul>
+<li>バグ修正: 削除されたカラムを持つテーブルを再編成した際に、そのテーブルに対するビューや関数が壊れないように修正しました</li>
+<li>PostgreSQL 9.1および9.2devをサポートしました (EXTENSIONはまだサポートしていません)</li>
+</ul>
+</li>
+</ul>
+<!-- See Also
+- - - - - - - - -->
+</div>
+<div class="section" id="id21">
+<h2>関連項目</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://www.postgresql.jp/document/current/html/app-clusterdb.html">clusterdb</a></li>
+<li><a class="reference external" href="http://www.postgresql.jp/document/current/html/app-vacuumdb.html">vacuumdb</a></li>
+</ul>
+</div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251334-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</div>
+</body>
+</html>
