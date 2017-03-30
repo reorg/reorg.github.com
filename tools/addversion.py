@@ -7,29 +7,39 @@ Assume the title is underlined with '=' and contains a -- after the project
 name.
 """
 
+import os
 import sys
+import json
 
 
 def main():
-    version = sys.argv[1]
-    lines = sys.stdin.readlines()
+    docfn = sys.argv[1]
+
+    with open(docfn) as f:
+        lines = f.read().decode('utf8').splitlines()
+
+    metafn = os.path.join(os.path.dirname(docfn), '..', 'META.json')
+    with open(metafn) as f:
+        meta = json.load(f)
+
+    version = meta['version']
 
     # find the title
     for i, l in enumerate(lines):
         l = l.rstrip()
-        if l and l == '=' * len(l):
+        if l and l == u'=' * len(l):
             title = lines[i-1]
             title = title.split()
-            title.insert(title.index('--'), version)
-            title = ' '.join(title)
-            lines[i-1] = title + '\n'
-            lines[i] = '=' * len(title) + '\n'
+            title.insert(title.index(u'--'), version)
+            title = u' '.join(title)
+            lines[i-1] = title
+            lines[i] = u'=' * len(title.encode('utf8'))
             break
     else:
         raise ValueError('title not found')
 
-    for l in lines:
-        sys.stdout.write(l)
+    sys.stdout.write(u'\n'.join(lines).encode('utf8'))
+
 
 if __name__ == '__main__':
     sys.exit(main())

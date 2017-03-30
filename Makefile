@@ -41,17 +41,11 @@ pg_repack/jp/index.html: pg_repack/$(CURRENT)/jp/index.html
 
 pg_repack/%/index.html: sm/%/doc/pg_repack.rst $(CSS) $(RST2HTML)
 	mkdir -p `dirname $@`
-	$(eval VER := $(shell \
-		grep '"version":' `dirname $<`/..//META.json | head -1 \
-			| sed -e 's/\s*"version":\s*"\(.*\)",/\1/'))
-	$(ADDVERSION) $(VER) < $< | $(RST2HTML) $(RSTOPTS) > $@
+	$(ADDVERSION) $< | $(RST2HTML) $(RSTOPTS) > $@
 
 pg_repack/%/jp/index.html: sm/%/doc/pg_repack_jp.rst $(CSS) $(RST2HTML)
 	mkdir -p `dirname $@`
-	$(eval VER := $(shell \
-		grep '"version":' `dirname $<`/..//META.json | head -1 \
-			| sed -e 's/\s*"version":\s*"\(.*\)",/\1/'))
-	$(ADDVERSION) $(VER) < $< | $(RST2HTML) $(RSTOPTS) > $@
+	$(ADDVERSION) $< | $(RST2HTML) $(RSTOPTS) > $@
 
 $(RST2HTML): requirements.txt $(PIP)
 	$(PIP) install -U -r requirements.txt
