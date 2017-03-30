@@ -519,6 +519,9 @@ pg_repack [OPTION]... [DBNAME]
 <kbd><span class="option">-n</span>, <span class="option">--no-order</span></kbd></td>
 <td>do vacuum full instead of cluster</td></tr>
 <tr><td class="option-group">
+<kbd><span class="option">-N</span>, <span class="option">--dry-run</span></kbd></td>
+<td>print what would have been repacked and exit</td></tr>
+<tr><td class="option-group">
 <kbd><span class="option">-j</span>, <span class="option">--jobs=<var>NUM</var></span></kbd></td>
 <td>Use this many parallel jobs for each table</td></tr>
 <tr><td class="option-group" colspan="2">
@@ -608,6 +611,8 @@ tables in the target databases are reorganized.</dd>
 <dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
 <dd>Perform an online VACUUM FULL.  Since version 1.2 this is the default for
 non-clustered tables.</dd>
+<dt><tt class="docutils literal"><span class="pre">-N</span></tt>, <tt class="docutils literal"><span class="pre">--dry-run</span></tt></dt>
+<dd>List what would be repacked and exit.</dd>
 <dt><tt class="docutils literal"><span class="pre">-j</span></tt>, <tt class="docutils literal"><span class="pre">--jobs</span></tt></dt>
 <dd>Create the specified number of extra connections to PostgreSQL, and
 use these extra connections to parallelize the rebuild of indexes
@@ -840,10 +845,16 @@ the original index.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.3<ul>
+<li>Added <tt class="docutils literal"><span class="pre">--dry-run</span></tt> to do a dry run.</li>
+</ul>
+</li>
 <li>pg_repack 1.2<ul>
+<li>Support PostgreSQL 9.3.</li>
 <li>Added <tt class="docutils literal"><span class="pre">--tablespace</span></tt> and <tt class="docutils literal"><span class="pre">--moveidx</span></tt> options to perform online
 SET TABLESPACE.</li>
-<li>Added <tt class="docutils literal"><span class="pre">--index</span></tt> to repack indexes only.</li>
+<li>Added <tt class="docutils literal"><span class="pre">--index</span></tt> to repack the specified index only.</li>
+<li>Added <tt class="docutils literal"><span class="pre">--only-indexes</span></tt> to repack only the indexes of the specified table</li>
 <li>Added <tt class="docutils literal"><span class="pre">--jobs</span></tt> option for parallel operation.</li>
 <li>Don't require <tt class="docutils literal"><span class="pre">--no-order</span></tt> to perform a VACUUM FULL on non-clustered
 tables (pg_repack issue #6).</li>

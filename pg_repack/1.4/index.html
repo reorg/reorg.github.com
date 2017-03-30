@@ -552,6 +552,10 @@ pg_repack [OPTION]... [DBNAME]
 <kbd><span class="option">-k</span>, <span class="option">--no-superuser-check</span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>skip superuser checks in client</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-C</span>, <span class="option">--exclude-extension</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>don't repack tables which belong to specific extension</td></tr>
 </tbody>
 </table>
 </dd>
@@ -669,6 +673,9 @@ ANALYZE after the reorganization.</dd>
 <dt><tt class="docutils literal"><span class="pre">-k</span></tt>, <tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt></dt>
 <dd>Skip the superuser checks in the client.  This setting is useful for using
 pg_repack on platforms that support running it as non-superusers.</dd>
+<dt><tt class="docutils literal"><span class="pre">-C</span></tt>, <tt class="docutils literal"><span class="pre">--exclude-extension</span></tt></dt>
+<dd>Skip tables that belong to the specified extension(s). Some extensions
+may heavily depend on such tables at planning time etc.</dd>
 </dl>
 </div>
 <div class="section" id="connection-options">
@@ -886,6 +893,7 @@ and DELETEs may proceed as usual.</p>
 CONFLICT</tt> (issue #106)</li>
 <li>added <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> option (issue #108)</li>
 <li>added <tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt> option (issue #114)</li>
+<li>added <tt class="docutils literal"><span class="pre">--exclude-extension</span></tt> option (#97)</li>
 </ul>
 </li>
 <li>pg_repack 1.3.4<ul>
