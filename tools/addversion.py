@@ -44,8 +44,17 @@ def main():
     versions = get_doc_versions(opt.docfn)
     if versions:
         versions = render_versions(versions)
-        lines[pos+1:pos+1] = versions
+        lines[pos:pos] = versions
         pos += len(versions)
+
+    # find other languages of the same version
+    langs = get_doc_languages(opt.docfn)
+    if langs:
+        langs = render_languages(langs)
+        lines[pos:pos] = langs
+        pos += len(langs)
+
+    lines[pos:pos] = [u'']
 
     sys.stdout.write(u'\n'.join(lines).encode('utf8'))
 
@@ -78,7 +87,7 @@ def fix_title(lines):
     else:
         raise ValueError('title not found')
 
-    return i + 1
+    return i + 2
 
 
 def get_doc_versions(docfn):
@@ -125,15 +134,9 @@ def get_doc_versions(docfn):
     return rv
 
 
-def get_language(fn):
-    m = re.match(r'pg_repack_(..)\.rst', fn)
-    if m is not None:
-        return m.group(1)
-
-
 def render_versions(versions):
     """Render the block of versions links in reST"""
-    rv = ['', _(u'Versions:')]
+    rv = [_(u'Versions:')]
     for label, url in versions:
         if not url:
             rv.append(label)
@@ -141,7 +144,52 @@ def render_versions(versions):
             rv.append('`%s <%s>`__' % (label, url))
 
     rv.append('')
+
     return rv
+
+
+def get_doc_languages(docfn):
+    tokens = docfn.split('/')
+    tokens[-1] = 'pg_repack*.rst'
+    docs = sorted(glob('/'.join(tokens)))
+    this_lang = get_language(docfn.split('/')[-1])
+
+    if len(docs) < 2:
+        return []
+
+    rv = []
+    for fn in docs:
+        lang = get_language(fn.split('/')[-1])
+        if this_lang == lang:
+            url = None
+        elif lang is None:
+            url = '../'
+        else:
+            url = '%s/' % lang
+
+        label = lang or 'en'
+        rv.append((label, url))
+
+    return rv
+
+
+def render_languages(langs):
+    rv = [_(u'Languages:')]
+    for label, url in langs:
+        if not url:
+            rv.append(label)
+        else:
+            rv.append('`%s <%s>`__' % (label, url))
+
+    rv.append('')
+
+    return rv
+
+
+def get_language(fn):
+    m = re.match(r'pg_repack_(..)\.rst', fn)
+    if m is not None:
+        return m.group(1)
 
 
 def parse_cmdline():
