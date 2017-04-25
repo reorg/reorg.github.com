@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4-dev0 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
+<title>pg_repack 1.4 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
 <style type="text/css">
 
 body {
@@ -75,7 +75,7 @@ dl.ddl dt {
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7514 2012-09-14 14:27:12Z milde $
+:Id: $Id: html4css1.css 7434 2012-05-11 21:06:27Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -143,7 +143,7 @@ div.tip p.admonition-title {
 
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
-div.warning p.admonition-title, .code .error {
+div.warning p.admonition-title {
   color: red ;
   font-weight: bold ;
   font-family: sans-serif }
@@ -319,14 +319,13 @@ pre.literal-block, pre.doctest-block, pre.math, pre.code {
   margin-left: 2em ;
   margin-right: 2em }
 
-pre.code .ln { color: grey; } /* line numbers */
-pre.code, code { background-color: #eeeeee }
-pre.code .comment, code .comment { color: #5C6576 }
-pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
-pre.code .literal.string, code .literal.string { color: #0C5404 }
-pre.code .name.builtin, code .name.builtin { color: #352B84 }
-pre.code .deleted, code .deleted { background-color: #DEB0A1}
-pre.code .inserted, code .inserted { background-color: #A3D289}
+pre.code .ln { /* line numbers */
+  color: grey;
+}
+
+.code {
+  background-color: #eeeeee
+}
 
 span.classifier {
   font-family: sans-serif ;
@@ -389,8 +388,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-dev0-postgresql">
-<h1 class="title">pg_repack 1.4-dev0 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
+<div class="document" id="pg-repack-1-4-postgresql">
+<h1 class="title">pg_repack 1.4 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
 
 <!-- pg_repack - - Reorganize tables in PostgreSQL databases with minimal locks
 ========================================================================= -->
@@ -575,6 +574,7 @@ The following options can be specified in ``OPTIONS``.
 Options:
   -a, - -all                 repack all databases
   -t, - -table=TABLE         repack specific table only
+  -I, - -parent-table=TABLE  repack specific parent table and its inheritors
   -c, - -schema=SCHEMA       repack tables in specific schema only
   -s, - -tablespace=TBLSPC   move repacked tables to a new tablespace
   -S, - -moveidx             move repacked indexes to *TBLSPC* too
@@ -622,6 +622,10 @@ pg_repack [OPTION]... [DBNAME]
 <kbd><span class="option">-t</span>, <span class="option">--table=<var>TABLE</var></span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>指定したテーブルに対して実行します</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-I</span>, <span class="option">--parent-table=<var>TABLE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>指定したテーブルとそれを継承する全ての子テーブルに対して実行します</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-c</span>, <span class="option">--schema=<var>SCHEMA</var></span></kbd></td>
 </tr>
@@ -743,6 +747,13 @@ tables in the target databases are reorganized. -->
 <dt><tt class="docutils literal"><span class="pre">-t</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--table=TABLE</span></tt></dt>
 <dd>指定したテーブルのみを再編成します。 <tt class="docutils literal"><span class="pre">-t</span></tt> オプションを複数同時に使用することで、複数のテーブルを指定することができます。このオプションを指定しない限り、対象のデータベースに存在するすべてのテーブルを再編成します。</dd>
 </dl>
+<!-- ``-I TABLE``, ``- -parent-table=TABLE``
+Reorganize both the specified table(s) and its inheritors. Multiple
+table hierarchies may be reorganized by writing multiple ``-I`` switches. -->
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">-I</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--parent-table=TABLE</span></tt></dt>
+<dd>指定したテーブルとその子テーブルのみを再編成します。 <tt class="docutils literal"><span class="pre">-I</span></tt> オプションを複数同時に使用することで、複数の親テーブルを指定することができます。</dd>
+</dl>
 <!-- ``-c``, ``- -schema``
 Repack the tables in the specified schema(s) only. Multiple schemas may
 be repacked by writing multiple ``-c`` switches. May be used in
@@ -806,10 +817,10 @@ by writing multiple ``-i`` switches. May be used in conjunction with
 </dl>
 <!-- ``-x``, ``- -only-indexes``
 Repack only the indexes of the specified table(s), which must be specified
-with the ``- -table`` option. -->
+with the ``- -table`` or ``- -parent-table`` option. -->
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">-x</span></tt>, <tt class="docutils literal"><span class="pre">--only-indexes</span></tt></dt>
-<dd><tt class="docutils literal"><span class="pre">--table</span></tt> オプションと併用することで、指定したテーブルのインデックスのみを再編成します。</dd>
+<dd><tt class="docutils literal"><span class="pre">--table</span></tt> または <tt class="docutils literal"><span class="pre">--parent-table</span></tt> オプションと併用することで、指定したテーブルのインデックスのみを再編成します。</dd>
 </dl>
 <!-- ``-T SECS``, ``- -wait-timeout=SECS``
 pg_repack needs to take an exclusive lock at the end of the
@@ -849,12 +860,12 @@ pg_repack on platforms that support running it as non-superusers. -->
 <!-- Connection Options
  ^^^^^^^^^^^^^^^^^^
 Options to connect to servers. You cannot use ``- -all`` and ``- -dbname`` or
-``- -table`` together. -->
+``- -table`` or ``- -parent-table`` together. -->
 </div>
 <div class="section" id="id8">
 <h2>接続オプション</h2>
 <p>PostgreSQLサーバに接続するためのオプションです。
-<tt class="docutils literal"><span class="pre">--all</span></tt> オプションと同時に <tt class="docutils literal"><span class="pre">--dbname</span></tt> や <tt class="docutils literal"><span class="pre">--table</span></tt> を利用することはできません。</p>
+<tt class="docutils literal"><span class="pre">--all</span></tt> オプションと同時に <tt class="docutils literal"><span class="pre">--dbname</span></tt> 、 <tt class="docutils literal"><span class="pre">--table</span></tt> や <tt class="docutils literal"><span class="pre">--parent-table</span></tt> を利用することはできません。</p>
 <!-- ``-a``, ``- -all``
 Reorganize all databases. -->
 <dl class="docutils">
@@ -1274,6 +1285,9 @@ Creating indexes concurrently comes with a few caveats, please see `the document
 <!-- * added ``- -no-kill-backend`` option (issue #108) -->
 <!-- * added ``- -no-superuser-check`` option (issue #114) -->
 <!-- * added ``- -exclude-extension`` option (#97) -->
+<!-- * added ``- -parent-table`` option (#117) -->
+<!-- * restore TOAST storage parameters on repacked tables (issue #10) -->
+<!-- * restore columns storage types in repacked tables (issue #94) -->
 <ul class="simple">
 <li>pg_repack 1.4<ul>
 <li>PostgreSQL 9.6をサポートしました</li>
@@ -1282,6 +1296,9 @@ Creating indexes concurrently comes with a few caveats, please see `the document
 <li><tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> オプションを追加しました (issue #108)</li>
 <li><tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt> オプションを追加しました (issue #114)</li>
 <li><tt class="docutils literal"><span class="pre">--exclude-extension</span></tt> オプションを追加しました (#97)</li>
+<li><tt class="docutils literal"><span class="pre">--parent-table</span></tt> オプションを追加しました(#117)</li>
+<li>TOASTテーブルの格納オプションを再編成後のテーブルに再設定するようにしました (issue #10)</li>
+<li>列の格納タイプを再編成後のテーブルに再設定するようにしました (issue #94)</li>
 </ul>
 </li>
 </ul>

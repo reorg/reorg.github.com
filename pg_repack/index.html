@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4-dev0 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.4 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 body {
@@ -75,7 +75,7 @@ dl.ddl dt {
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7514 2012-09-14 14:27:12Z milde $
+:Id: $Id: html4css1.css 7434 2012-05-11 21:06:27Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -143,7 +143,7 @@ div.tip p.admonition-title {
 
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
-div.warning p.admonition-title, .code .error {
+div.warning p.admonition-title {
   color: red ;
   font-weight: bold ;
   font-family: sans-serif }
@@ -319,14 +319,13 @@ pre.literal-block, pre.doctest-block, pre.math, pre.code {
   margin-left: 2em ;
   margin-right: 2em }
 
-pre.code .ln { color: grey; } /* line numbers */
-pre.code, code { background-color: #eeeeee }
-pre.code .comment, code .comment { color: #5C6576 }
-pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
-pre.code .literal.string, code .literal.string { color: #0C5404 }
-pre.code .name.builtin, code .name.builtin { color: #352B84 }
-pre.code .deleted, code .deleted { background-color: #DEB0A1}
-pre.code .inserted, code .inserted { background-color: #A3D289}
+pre.code .ln { /* line numbers */
+  color: grey;
+}
+
+.code {
+  background-color: #eeeeee
+}
 
 span.classifier {
   font-family: sans-serif ;
@@ -389,8 +388,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-dev0-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.4-dev0 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-4-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.4 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="1.1/">1.1</a>
@@ -475,21 +474,12 @@ $ sudo make install
 <p>You can also use Microsoft Visual C++ 2010 to build the program on Windows.
 There are project files in the <tt class="docutils literal">msvc</tt> folder.</p>
 <p>After installation, load the pg_repack extension in the database you want to
-process. On PostgreSQL 9.1 and following pg_repack is packaged as an
-extension, so you can execute:</p>
+process. pg_repack is packaged as an extension, so you can execute:</p>
 <pre class="literal-block">
 $ psql -c &quot;CREATE EXTENSION pg_repack&quot; -d your_database
 </pre>
-<p>For previous PostgreSQL versions you should load the script
-<tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> in the database to process; you can
-get <tt class="docutils literal">$SHAREDIR</tt> using <tt class="docutils literal">pg_config <span class="pre">--sharedir</span></tt>, e.g.</p>
-<pre class="literal-block">
-$ psql -f &quot;$(pg_config --sharedir)/contrib/pg_repack.sql&quot; -d your_database
-</pre>
-<p>You can remove pg_repack from a PostgreSQL 9.1 and following database using
-<tt class="docutils literal">DROP EXTENSION pg_repack</tt>. For previous Postgresql versions load the
-<tt class="docutils literal">$SHAREDIR/contrib/uninstall_pg_repack.sql</tt> script or just drop the
-<tt class="docutils literal">repack</tt> schema.</p>
+<p>You can remove pg_repack using <tt class="docutils literal">DROP EXTENSION pg_repack</tt> or just dropping
+the <tt class="docutils literal">repack</tt> schema.</p>
 <p>If you are upgrading from a previous version of pg_repack or pg_reorg, just
 drop the old version from the database as explained above and install the new
 version.</p>
@@ -513,6 +503,10 @@ pg_repack [OPTION]... [DBNAME]
 <kbd><span class="option">-t</span>, <span class="option">--table=<var>TABLE</var></span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>repack specific table only</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-I</span>, <span class="option">--parent-table=<var>TABLE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>repack specific parent table and its inheritors</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-c</span>, <span class="option">--schema=<var>SCHEMA</var></span></kbd></td>
 </tr>
@@ -631,6 +625,9 @@ pg_repack [OPTION]... [DBNAME]
 <dd>Reorganize the specified table(s) only. Multiple tables may be
 reorganized by writing multiple <tt class="docutils literal"><span class="pre">-t</span></tt> switches. By default, all eligible
 tables in the target databases are reorganized.</dd>
+<dt><tt class="docutils literal"><span class="pre">-I</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--parent-table=TABLE</span></tt></dt>
+<dd>Reorganize both the specified table(s) and its inheritors. Multiple
+table hierarchies may be reorganized by writing multiple <tt class="docutils literal"><span class="pre">-I</span></tt> switches.</dd>
 <dt><tt class="docutils literal"><span class="pre">-c</span></tt>, <tt class="docutils literal"><span class="pre">--schema</span></tt></dt>
 <dd>Repack the tables in the specified schema(s) only. Multiple schemas may
 be repacked by writing multiple <tt class="docutils literal"><span class="pre">-c</span></tt> switches. May be used in
@@ -662,7 +659,7 @@ by writing multiple <tt class="docutils literal"><span class="pre">-i</span></tt
 <tt class="docutils literal"><span class="pre">--tablespace</span></tt> to move the index to a different tablespace.</dd>
 <dt><tt class="docutils literal"><span class="pre">-x</span></tt>, <tt class="docutils literal"><span class="pre">--only-indexes</span></tt></dt>
 <dd>Repack only the indexes of the specified table(s), which must be specified
-with the <tt class="docutils literal"><span class="pre">--table</span></tt> option.</dd>
+with the <tt class="docutils literal"><span class="pre">--table</span></tt> or <tt class="docutils literal"><span class="pre">--parent-table</span></tt> options.</dd>
 <dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
 <dd>pg_repack needs to take an exclusive lock at the end of the
 reorganization.  This setting controls how many seconds pg_repack will
@@ -690,7 +687,7 @@ may heavily depend on such tables at planning time etc.</dd>
 <div class="section" id="connection-options">
 <h3>Connection Options</h3>
 <p>Options to connect to servers. You cannot use <tt class="docutils literal"><span class="pre">--all</span></tt> and <tt class="docutils literal"><span class="pre">--dbname</span></tt> or
-<tt class="docutils literal"><span class="pre">--table</span></tt> together.</p>
+<tt class="docutils literal"><span class="pre">--table</span></tt> or <tt class="docutils literal"><span class="pre">--parent-table</span></tt> together.</p>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">--all</span></tt></dt>
 <dd>Reorganize all databases.</dd>
@@ -897,12 +894,15 @@ and DELETEs may proceed as usual.</p>
 <h2>Releases</h2>
 <ul class="simple">
 <li>pg_repack 1.4<ul>
-<li>added support for PostgreSQL 9.6</li>
+<li>added support for PostgreSQL 9.6, dropped support for versions before 9.1</li>
 <li>use <tt class="docutils literal">AFTER</tt> trigger to solve concurrency problems with <tt class="docutils literal">INSERT
 CONFLICT</tt> (issue #106)</li>
 <li>added <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> option (issue #108)</li>
 <li>added <tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt> option (issue #114)</li>
 <li>added <tt class="docutils literal"><span class="pre">--exclude-extension</span></tt> option (#97)</li>
+<li>added <tt class="docutils literal"><span class="pre">--parent-table</span></tt> option (#117)</li>
+<li>restore TOAST storage parameters on repacked tables (issue #10)</li>
+<li>restore columns storage types in repacked tables (issue #94)</li>
 </ul>
 </li>
 <li>pg_repack 1.3.4<ul>
