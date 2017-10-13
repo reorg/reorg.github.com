@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.1 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.4.2 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 body {
@@ -388,8 +388,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-1-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.4.1 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-4-2-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.4.2 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="../1.1/">1.1</a>
@@ -441,7 +441,7 @@ NOT NULL column.</li>
 <h2>Requirements</h2>
 <dl class="docutils">
 <dt>PostgreSQL versions</dt>
-<dd>PostgreSQL 9.1, 9.2, 9.3, 9.4, 9.5, 9.6</dd>
+<dd>PostgreSQL 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 10</dd>
 <dt>Disks</dt>
 <dd>Performing a full-table repack requires free disk space about twice as
 large as the target table(s) and its indexes. For example, if the total
@@ -843,7 +843,7 @@ should just use DROP INDEX and try the repack command again.</p>
 </div>
 <div class="section" id="gist-indexes">
 <h3>GiST indexes</h3>
-<p>pg_repack cannot reorganize tables using GiST indexes.</p>
+<p>pg_repack cannot cluster tables by GiST indexes.</p>
 </div>
 <div class="section" id="ddl-commands">
 <h3>DDL commands</h3>
@@ -893,6 +893,12 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.4.2<ul>
+<li>added PostgreSQL 10 support (issue #120)</li>
+<li>fixed error DROP INDEX CONCURRENTLY cannot run inside a transaction block
+(issue #129)</li>
+</ul>
+</li>
 <li>pg_repack 1.4.1<ul>
 <li>fixed broken <tt class="docutils literal"><span class="pre">--order-by</span></tt> option (issue #138)</li>
 </ul>
