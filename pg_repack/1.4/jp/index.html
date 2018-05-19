@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.2 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
+<title>pg_repack 1.4.3 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
 <style type="text/css">
 
 body {
@@ -388,8 +388,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-2-postgresql">
-<h1 class="title">pg_repack 1.4.2 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
+<div class="document" id="pg-repack-1-4-3-postgresql">
+<h1 class="title">pg_repack 1.4.3 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
 
 <!-- pg_repack - - Reorganize tables in PostgreSQL databases with minimal locks
 ========================================================================= -->
@@ -1280,31 +1280,20 @@ Creating indexes concurrently comes with a few caveats, please see `the document
 <h2>リリースノート</h2>
 <!-- * pg_repack 1.4.2 -->
 <!-- * added PostgreSQL 10 support (issue #120) -->
-<!-- * fixed error DROP INDEX CONCURRENTLY cannot run inside a transaction block
-(issue #129) -->
-<ul>
-<li><p class="first">pg_repack 1.4.2
-* PostgreSQL 10をサポートしました (issue #120)
-* エラー「DROP INDEX CONCURRENTLY cannot run inside a transaction block」が発生する事象を</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;stdin&gt;</tt>, line 885)</p>
-<p>Unexpected indentation.</p>
-</div>
-<blockquote>
-<p>修正しました (issue #129)</p>
-</blockquote>
+<!-- * fixed error DROP INDEX CONCURRENTLY cannot run inside a transaction block (issue #129) -->
+<ul class="simple">
+<li>pg_repack 1.4.2<ul>
+<li>PostgreSQL 10をサポートしました (issue #120)</li>
+<li>エラー「DROP INDEX CONCURRENTLY cannot run inside a transaction block」が発生する事象を修正しました (issue #129)</li>
+</ul>
 </li>
 </ul>
 <!-- * pg_repack 1.4.1 -->
 <!-- * fixed broken ``- -order-by`` option (issue #138) -->
 <ul class="simple">
-<li><dl class="first docutils">
-<dt>pg_repack 1.4.1</dt>
-<dd><ul class="first last">
+<li>pg_repack 1.4.1<ul>
 <li>壊れていた <tt class="docutils literal"><span class="pre">--order-by</span></tt> オプションを修正しました (issue #138)</li>
 </ul>
-</dd>
-</dl>
 </li>
 </ul>
 <!-- * pg_repack 1.4 -->
