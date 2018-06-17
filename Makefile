@@ -7,8 +7,7 @@ PIP = env/bin/pip
 VIRTUALENV = virtualenv
 CSS = sm/master/doc/style.css
 RST2HTML = env/bin/rst2html.py
-RSTCSS = $(shell python -c 'import docutils.writers.html4css1 as m; print m.Writer.default_stylesheet_path')
-RSTOPTS = --template=template.txt --stylesheet-path=$(CSS),$(RSTCSS) --initial-header-level=2
+RSTOPTS = --template=template.txt --stylesheet-path=$(CSS),html4css1.css --initial-header-level=2
 
 ADDVERSION = tools/addversion.py
 
