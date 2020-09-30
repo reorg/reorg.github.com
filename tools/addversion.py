@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Add version number to the pages title and generate cross links
 
 Assume the title is underlined with '=' and contains a -- after the project
@@ -36,7 +36,7 @@ def main():
     opt = parse_cmdline()
 
     with open(opt.docfn) as f:
-        lines = f.read().decode('utf8').splitlines()
+        lines = f.read().splitlines()
 
     pos = fix_title(lines)
 
@@ -56,7 +56,7 @@ def main():
 
     lines[pos:pos] = [u'']
 
-    sys.stdout.write(u'\n'.join(lines).encode('utf8'))
+    sys.stdout.write(u'\n'.join(lines))
 
 
 def get_version():
