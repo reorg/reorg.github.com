@@ -4,10 +4,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.4 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
+<title>pg_repack 1.4.6 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
 <style type="text/css">
 
-body {
+﻿body {
 	font-family:
 		Lucida Grande, Verdana, Arial, Helvetica,
 		'メイリオ',
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-4-postgresql">
-<h1 class="title">pg_repack 1.4.4 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
+<div class="document" id="pg-repack-1-4-6-postgresql">
+<h1 class="title">pg_repack 1.4.6 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
 
 <!-- pg_repack - - Reorganize tables in PostgreSQL databases with minimal locks
 ========================================================================= -->
@@ -468,7 +468,7 @@ PostgreSQLの <a class="reference external" href="http://www.postgresql.jp/docum
 pg_repackはCLUSTERコマンドを直接実行するのと同じくらいの性能で起動することができて効率的です。</p>
 <!-- pg_repack is a fork of the previous pg_reorg_ project. Please check the
 `project page`_ for bug report and development information. -->
-<p>pg_repack は <a class="reference external" href="http://reorg.projects.pgfoundry.org/">pg_reorg</a> からフォークしたプロジェクトです。
+<p>pg_repack は <a class="reference external" href="https://github.com/reorg/pg_reorg">pg_reorg</a> からフォークしたプロジェクトです。
 バグ報告や開発情報については <a class="reference external" href="https://github.com/reorg/pg_repack">project page</a> を参照してください。</p>
 <!-- You can choose one of the following methods to reorganize:
 
@@ -527,18 +527,18 @@ the package; use::
 
 Check the `pgxn install documentation`__ for the options available.
 
-.. _PGXN Client: http://pgxnclient.projects.pgfoundry.org/
-.. __: http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install -->
+.. _PGXN Client: https://pgxn.github.io/pgxnclient/
+.. __: https://pgxn.github.io/pgxnclient/usage.html#pgxn-install -->
 </div>
 <div class="section" id="id2">
 <h2>ダウンロード</h2>
 <p>pg_repackは、PGXNのWebサイトから <a class="reference external" href="http://pgxn.org/dist/pg_repack/">ダウンロード</a> できます。
 ダウンロードしたアーカイブを展開し、以下の手順にしたがって <a class="reference internal" href="#id5">インストール</a> してください。</p>
-<p>もしくは、 <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/">PGXN Client</a> を使ってダウンロードからコンパイル、インストールすることもできます。:</p>
+<p>もしくは、 <a class="reference external" href="https://pgxn.github.io/pgxnclient/">PGXN Client</a> を使ってダウンロードからコンパイル、インストールすることもできます。:</p>
 <pre class="literal-block">
 $ pgxn install pg_repack
 </pre>
-<p>利用可能なオプションについては <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install">pgxn install コマンドのドキュメント</a> を参照してください。</p>
+<p>利用可能なオプションについては <a class="reference external" href="https://pgxn.github.io/pgxnclient/usage.html#pgxn-install">pgxn install コマンドのドキュメント</a> を参照してください。</p>
 <!-- Installation
 - - - - - - - - - - - -
 

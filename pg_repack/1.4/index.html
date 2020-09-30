@@ -4,10 +4,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.5 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.4.6 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
-body {
+﻿body {
 	font-family:
 		Lucida Grande, Verdana, Arial, Helvetica,
 		'メイリオ',
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-5-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.4.5 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-4-6-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.4.6 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="../1.1/">1.1</a>
@@ -460,7 +460,7 @@ indexes. Unlike <a class="reference external" href="http://www.postgresql.org/do
 holding an exclusive lock on the processed tables during processing.
 pg_repack is efficient to boot, with performance comparable to using
 CLUSTER directly.</p>
-<p>pg_repack is a fork of the previous <a class="reference external" href="http://reorg.projects.pgfoundry.org/">pg_reorg</a> project. Please check the
+<p>pg_repack is a fork of the previous <a class="reference external" href="https://github.com/reorg/pg_reorg">pg_reorg</a> project. Please check the
 <a class="reference external" href="https://github.com/reorg/pg_repack">project page</a> for bug report and development information.</p>
 <p>You can choose one of the following methods to reorganize:</p>
 <ul class="simple">
@@ -479,7 +479,7 @@ NOT NULL column.</li>
 <h2>Requirements</h2>
 <dl class="docutils">
 <dt>PostgreSQL versions</dt>
-<dd>PostgreSQL 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 10, 11, 12</dd>
+<dd>PostgreSQL 9.4, 9.5, 9.6, 10, 11, 12, 13</dd>
 <dt>Disks</dt>
 <dd>Performing a full-table repack requires free disk space about twice as
 large as the target table(s) and its indexes. For example, if the total
@@ -491,12 +491,12 @@ of disk space is required.</dd>
 <h2>Download</h2>
 <p>You can <a class="reference external" href="http://pgxn.org/dist/pg_repack/">download pg_repack</a> from the PGXN website. Unpack the archive and
 follow the <a class="reference internal" href="#installation">installation</a> instructions.</p>
-<p>Alternatively you can use the <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/">PGXN Client</a> to download, compile and install
+<p>Alternatively you can use the <a class="reference external" href="https://pgxn.github.io/pgxnclient/">PGXN Client</a> to download, compile and install
 the package; use:</p>
 <pre class="literal-block">
 $ pgxn install pg_repack
 </pre>
-<p>Check the <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install">pgxn install documentation</a> for the options available.</p>
+<p>Check the <a class="reference external" href="https://pgxn.github.io/pgxnclient/usage.html#pgxn-install">pgxn install documentation</a> for the options available.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation</h2>
@@ -931,6 +931,11 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.4.6<ul>
+<li>Added support for PostgreSQL 13</li>
+<li>Dropped support for PostgreSQL before 9.4</li>
+</ul>
+</li>
 <li>pg_repack 1.4.5<ul>
 <li>Added support for PostgreSQL 12</li>
 <li>Fixed parallel processing for indexes with operators from public schema</li>
