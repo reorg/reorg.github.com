@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.6 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.4.8 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-6-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.4.6 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-4-8-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.4.8 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="1.1/">1.1</a>
@@ -454,7 +454,7 @@ en
 <li><a class="reference internal" href="#see-also" id="id15">See Also</a></li>
 </ul>
 </div>
-<p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> is a PostgreSQL extension which lets you remove bloat from
+<p><a class="reference external" href="https://reorg.github.io/pg_repack">pg_repack</a> is a PostgreSQL extension which lets you remove bloat from
 tables and indexes, and optionally restore the physical order of clustered
 indexes. Unlike <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-cluster.html">CLUSTER</a> and <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-vacuum.html">VACUUM FULL</a> it works online, without
 holding an exclusive lock on the processed tables during processing.
@@ -479,7 +479,7 @@ NOT NULL column.</li>
 <h2>Requirements</h2>
 <dl class="docutils">
 <dt>PostgreSQL versions</dt>
-<dd>PostgreSQL 9.4, 9.5, 9.6, 10, 11, 12, 13</dd>
+<dd>PostgreSQL 9.4, 9.5, 9.6, 10, 11, 12, 13, 14, 15</dd>
 <dt>Disks</dt>
 <dd>Performing a full-table repack requires free disk space about twice as
 large as the target table(s) and its indexes. For example, if the total
@@ -836,7 +836,7 @@ wrong database being addressed. Check the program directory and the
 database; if they are what expected you may need to repeat pg_repack
 installation.</p>
 </dd>
-<dt>ERROR: extension 'pg_repack V1' required, found extension 'pg_repack V2'</dt>
+<dt>ERROR: extension 'pg_repack V1' required, found 'pg_repack V2'</dt>
 <dd><p class="first">The SQL extension found in the database does not match the version
 required by the pg_repack program.</p>
 <p class="last">You should drop the extension from the database and reload it as described
@@ -931,6 +931,16 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.4.8<ul>
+<li>Added support for PostgreSQL 15</li>
+<li>Fixed --parent-table on declarative partitioned tables (issue #288)</li>
+<li>Removed connection info from error log (issue #285)</li>
+</ul>
+</li>
+<li>pg_repack 1.4.7<ul>
+<li>Added support for PostgreSQL 14</li>
+</ul>
+</li>
 <li>pg_repack 1.4.6<ul>
 <li>Added support for PostgreSQL 13</li>
 <li>Dropped support for PostgreSQL before 9.4</li>

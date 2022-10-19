@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.6 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
+<title>pg_repack 1.4.8 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-6-postgresql">
-<h1 class="title">pg_repack 1.4.6 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
+<div class="document" id="pg-repack-1-4-8-postgresql">
+<h1 class="title">pg_repack 1.4.8 -- PostgreSQLデータベースのテーブルを最小限のロックで再編成します</h1>
 
 <!-- pg_repack - - Reorganize tables in PostgreSQL databases with minimal locks
 ========================================================================= -->
@@ -463,7 +463,7 @@ indexes. Unlike CLUSTER_ and `VACUUM FULL`_ it works online, without
 holding an exclusive lock on the processed tables during processing.
 pg_repack is efficient to boot, with performance comparable to using
 CLUSTER directly. -->
-<p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> はPostgreSQLの拡張の一つで、肥大化したテーブルやインデックスを再編成し、さらに指定したインデックスにしたがってレコードを並び替えることができます。
+<p><a class="reference external" href="https://reorg.github.io/pg_repack">pg_repack</a> はPostgreSQLの拡張の一つで、肥大化したテーブルやインデックスを再編成し、さらに指定したインデックスにしたがってレコードを並び替えることができます。
 PostgreSQLの <a class="reference external" href="http://www.postgresql.jp/document/current/html/sql-cluster.html">CLUSTER</a> や <a class="reference external" href="http://www.postgresql.jp/document/current/html/sql-vacuum.html">VACUUM FULL</a> コマンドと違って、pg_repackは処理の間対象テーブルへの排他ロックを保持し続けないため、オンライン中に動作させることができます。
 pg_repackはCLUSTERコマンドを直接実行するのと同じくらいの性能で起動することができて効率的です。</p>
 <!-- pg_repack is a fork of the previous pg_reorg_ project. Please check the
