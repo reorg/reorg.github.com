@@ -4,7 +4,7 @@ VERSIONS = 1.1 1.2 1.3 1.4 1.5
 VERSIONS_JP = 1.3 1.4
 
 PIP = env/bin/pip
-VIRTUALENV = virtualenv
+VIRTUALENV = python3 -m venv
 CSS = sm/master/doc/style.css
 RST2HTML = env/bin/rst2html.py
 RSTOPTS = --template=template.txt --stylesheet-path=$(CSS),html4css1.css --initial-header-level=2
