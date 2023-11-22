@@ -1,6 +1,6 @@
 # reorg.github.com -- html pages generation
 
-VERSIONS = 1.1 1.2 1.3 1.4
+VERSIONS = 1.1 1.2 1.3 1.4 1.5
 VERSIONS_JP = 1.3 1.4
 
 PIP = env/bin/pip
@@ -11,7 +11,7 @@ RSTOPTS = --template=template.txt --stylesheet-path=$(CSS),html4css1.css --initi
 
 ADDVERSION = tools/addversion.py
 
-SM = sm/1.1 sm/1.2 sm/1.3 sm/master
+SM = sm/1.1 sm/1.2 sm/1.3 sm/1.4 sm/master
 
 HTML_EN = pg_repack/index.html $(patsubst %,pg_repack/%/index.html,$(VERSIONS))
 HTML_JP = pg_repack/jp/index.html $(patsubst %,pg_repack/%/jp/index.html,$(VERSIONS_JP))
