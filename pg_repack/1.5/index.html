@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.2.1 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.5.0 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,39 +426,42 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-2-1-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.2.1 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-5-0-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.5.0 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="../1.1/">1.1</a>
-1.2
+<a class="reference external" href="../1.2/">1.2</a>
 <a class="reference external" href="../1.3/">1.3</a>
 <a class="reference external" href="../1.4/">1.4</a>
-<a class="reference external" href="../1.5/">1.5</a>
+1.5
 <a class="reference external" href="../">master</a></p>
+<p>Languages:
+en
+<a class="reference external" href="jp/">jp</a></p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#requirements" id="id4">Requirements</a></li>
-<li><a class="reference internal" href="#download" id="id5">Download</a></li>
-<li><a class="reference internal" href="#installation" id="id6">Installation</a></li>
-<li><a class="reference internal" href="#usage" id="id7">Usage</a></li>
-<li><a class="reference internal" href="#environment" id="id8">Environment</a></li>
-<li><a class="reference internal" href="#examples" id="id9">Examples</a></li>
-<li><a class="reference internal" href="#diagnostics" id="id10">Diagnostics</a></li>
-<li><a class="reference internal" href="#restrictions" id="id11">Restrictions</a></li>
-<li><a class="reference internal" href="#details" id="id12">Details</a></li>
-<li><a class="reference internal" href="#releases" id="id13">Releases</a></li>
-<li><a class="reference internal" href="#see-also" id="id14">See Also</a></li>
+<li><a class="reference internal" href="#requirements" id="id5">Requirements</a></li>
+<li><a class="reference internal" href="#download" id="id6">Download</a></li>
+<li><a class="reference internal" href="#installation" id="id7">Installation</a></li>
+<li><a class="reference internal" href="#usage" id="id8">Usage</a></li>
+<li><a class="reference internal" href="#environment" id="id9">Environment</a></li>
+<li><a class="reference internal" href="#examples" id="id10">Examples</a></li>
+<li><a class="reference internal" href="#diagnostics" id="id11">Diagnostics</a></li>
+<li><a class="reference internal" href="#restrictions" id="id12">Restrictions</a></li>
+<li><a class="reference internal" href="#details" id="id13">Details</a></li>
+<li><a class="reference internal" href="#releases" id="id14">Releases</a></li>
+<li><a class="reference internal" href="#see-also" id="id15">See Also</a></li>
 </ul>
 </div>
-<p><a class="reference external" href="http://reorg.github.com/pg_repack">pg_repack</a> is a PostgreSQL extension which lets you remove bloat from
+<p><a class="reference external" href="https://reorg.github.io/pg_repack">pg_repack</a> is a PostgreSQL extension which lets you remove bloat from
 tables and indexes, and optionally restore the physical order of clustered
 indexes. Unlike <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-cluster.html">CLUSTER</a> and <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-vacuum.html">VACUUM FULL</a> it works online, without
 holding an exclusive lock on the processed tables during processing.
 pg_repack is efficient to boot, with performance comparable to using
 CLUSTER directly.</p>
-<p>pg_repack is a fork of the previous <a class="reference external" href="http://reorg.projects.pgfoundry.org/">pg_reorg</a> project. Please check the
+<p>pg_repack is a fork of the previous <a class="reference external" href="https://github.com/reorg/pg_reorg">pg_reorg</a> project. Please check the
 <a class="reference external" href="https://github.com/reorg/pg_repack">project page</a> for bug report and development information.</p>
 <p>You can choose one of the following methods to reorganize:</p>
 <ul class="simple">
@@ -477,7 +480,7 @@ NOT NULL column.</li>
 <h2>Requirements</h2>
 <dl class="docutils">
 <dt>PostgreSQL versions</dt>
-<dd>PostgreSQL 8.3, 8.4, 9.0, 9.1, 9.2, 9.3</dd>
+<dd>PostgreSQL 9.4, 9.5, 9.6, 10, 11, 12, 13, 14, 15</dd>
 <dt>Disks</dt>
 <dd>Performing a full-table repack requires free disk space about twice as
 large as the target table(s) and its indexes. For example, if the total
@@ -489,12 +492,12 @@ of disk space is required.</dd>
 <h2>Download</h2>
 <p>You can <a class="reference external" href="http://pgxn.org/dist/pg_repack/">download pg_repack</a> from the PGXN website. Unpack the archive and
 follow the <a class="reference internal" href="#installation">installation</a> instructions.</p>
-<p>Alternatively you can use the <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/">PGXN Client</a> to download, compile and install
+<p>Alternatively you can use the <a class="reference external" href="https://pgxn.github.io/pgxnclient/">PGXN Client</a> to download, compile and install
 the package; use:</p>
 <pre class="literal-block">
 $ pgxn install pg_repack
 </pre>
-<p>Check the <a class="reference external" href="http://pgxnclient.projects.pgfoundry.org/usage.html#pgxn-install">pgxn install documentation</a> for the options available.</p>
+<p>Check the <a class="reference external" href="https://pgxn.github.io/pgxnclient/usage.html#pgxn-install">pgxn install documentation</a> for the options available.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation</h2>
@@ -510,21 +513,12 @@ $ sudo make install
 <p>You can also use Microsoft Visual C++ 2010 to build the program on Windows.
 There are project files in the <tt class="docutils literal">msvc</tt> folder.</p>
 <p>After installation, load the pg_repack extension in the database you want to
-process. On PostgreSQL 9.1 and following pg_repack is packaged as an
-extension, so you can execute:</p>
+process. pg_repack is packaged as an extension, so you can execute:</p>
 <pre class="literal-block">
 $ psql -c &quot;CREATE EXTENSION pg_repack&quot; -d your_database
 </pre>
-<p>For previous PostgreSQL versions you should load the script
-<tt class="docutils literal">$SHAREDIR/contrib/pg_repack.sql</tt> in the database to process; you can
-get <tt class="docutils literal">$SHAREDIR</tt> using <tt class="docutils literal">pg_config <span class="pre">--sharedir</span></tt>, e.g.</p>
-<pre class="literal-block">
-$ psql -f &quot;$(pg_config --sharedir)/contrib/pg_repack.sql&quot; -d your_database
-</pre>
-<p>You can remove pg_repack from a PostgreSQL 9.1 and following database using
-<tt class="docutils literal">DROP EXTENSION pg_repack</tt>. For previous Postgresql versions load the
-<tt class="docutils literal">$SHAREDIR/contrib/uninstall_pg_repack.sql</tt> script or just drop the
-<tt class="docutils literal">repack</tt> schema.</p>
+<p>You can remove pg_repack using <tt class="docutils literal">DROP EXTENSION pg_repack</tt> or just dropping
+the <tt class="docutils literal">repack</tt> schema.</p>
 <p>If you are upgrading from a previous version of pg_repack or pg_reorg, just
 drop the old version from the database as explained above and install the new
 version.</p>
@@ -548,6 +542,14 @@ pg_repack [OPTION]... [DBNAME]
 <kbd><span class="option">-t</span>, <span class="option">--table=<var>TABLE</var></span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>repack specific table only</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-I</span>, <span class="option">--parent-table=<var>TABLE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>repack specific parent table and its inheritors</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-c</span>, <span class="option">--schema=<var>SCHEMA</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>repack tables in specific schema only</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-s</span>, <span class="option">--tablespace=<var>TBLSPC</var></span></kbd></td>
 </tr>
@@ -581,9 +583,23 @@ pg_repack [OPTION]... [DBNAME]
 </tr>
 <tr><td>&nbsp;</td><td>timeout to cancel other backends on conflict</td></tr>
 <tr><td class="option-group" colspan="2">
+<kbd><span class="option">-D</span>, <span class="option">--no-kill-backend</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>don't kill other backends when timed out</td></tr>
+<tr><td class="option-group" colspan="2">
 <kbd><span class="option">-Z</span>, <span class="option">--no-analyze</span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>don't analyze at end</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-k</span>, <span class="option">--no-superuser-check</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>skip superuser checks in client</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-C</span>, <span class="option">--exclude-extension</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>don't repack tables which belong to specific extension
+--error-on-invalid-index  don't repack when invalid index is found
+--switch-threshold        switch tables when that many tuples are left to catchup</td></tr>
 </tbody>
 </table>
 </dd>
@@ -650,6 +666,13 @@ pg_repack [OPTION]... [DBNAME]
 <dd>Reorganize the specified table(s) only. Multiple tables may be
 reorganized by writing multiple <tt class="docutils literal"><span class="pre">-t</span></tt> switches. By default, all eligible
 tables in the target databases are reorganized.</dd>
+<dt><tt class="docutils literal"><span class="pre">-I</span> TABLE</tt>, <tt class="docutils literal"><span class="pre">--parent-table=TABLE</span></tt></dt>
+<dd>Reorganize both the specified table(s) and its inheritors. Multiple
+table hierarchies may be reorganized by writing multiple <tt class="docutils literal"><span class="pre">-I</span></tt> switches.</dd>
+<dt><tt class="docutils literal"><span class="pre">-c</span></tt>, <tt class="docutils literal"><span class="pre">--schema</span></tt></dt>
+<dd>Repack the tables in the specified schema(s) only. Multiple schemas may
+be repacked by writing multiple <tt class="docutils literal"><span class="pre">-c</span></tt> switches. May be used in
+conjunction with <tt class="docutils literal"><span class="pre">--tablespace</span></tt> to move tables to a different tablespace.</dd>
 <dt><tt class="docutils literal"><span class="pre">-o</span> COLUMNS <span class="pre">[,...]</span></tt>, <tt class="docutils literal"><span class="pre">--order-by=COLUMNS</span> <span class="pre">[,...]</span></tt></dt>
 <dd>Perform an online CLUSTER ordered by the specified columns.</dd>
 <dt><tt class="docutils literal"><span class="pre">-n</span></tt>, <tt class="docutils literal"><span class="pre">--no-order</span></tt></dt>
@@ -677,24 +700,39 @@ by writing multiple <tt class="docutils literal"><span class="pre">-i</span></tt
 <tt class="docutils literal"><span class="pre">--tablespace</span></tt> to move the index to a different tablespace.</dd>
 <dt><tt class="docutils literal"><span class="pre">-x</span></tt>, <tt class="docutils literal"><span class="pre">--only-indexes</span></tt></dt>
 <dd>Repack only the indexes of the specified table(s), which must be specified
-with the <tt class="docutils literal"><span class="pre">--table</span></tt> option.</dd>
+with the <tt class="docutils literal"><span class="pre">--table</span></tt> or <tt class="docutils literal"><span class="pre">--parent-table</span></tt> options.</dd>
 <dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
-<dd>pg_repack needs to take an exclusive lock at the end of the
-reorganization.  This setting controls how many seconds pg_repack will
-wait to acquire this lock. If the lock cannot be taken after this duration,
-pg_repack will forcibly cancel the conflicting queries. If you are using
-PostgreSQL version 8.4 or newer, pg_repack will fall back to using
-pg_terminate_backend() to disconnect any remaining backends after
-twice this timeout has passed. The default is 60 seconds.</dd>
+<dd>pg_repack needs to take one exclusive lock at the beginning as well as one
+exclusive lock at the end of the repacking process. This setting controls
+how many seconds pg_repack will wait to acquire this lock. If the lock
+cannot be taken after this duration and <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> option is
+not specified, pg_repack will forcibly cancel the conflicting queries.
+If you are using PostgreSQL version 8.4 or newer, pg_repack will fall
+back to using pg_terminate_backend() to disconnect any remaining
+backends after twice this timeout has passed.
+The default is 60 seconds.</dd>
+<dt><tt class="docutils literal"><span class="pre">-D</span></tt>, <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt></dt>
+<dd>Skip to repack table if the lock cannot be taken for duration specified
+<tt class="docutils literal"><span class="pre">--wait-timeout</span></tt>, instead of cancelling conflicting queries. The default
+is false.</dd>
 <dt><tt class="docutils literal"><span class="pre">-Z</span></tt>, <tt class="docutils literal"><span class="pre">--no-analyze</span></tt></dt>
 <dd>Disable ANALYZE after a full-table reorganization. If not specified, run
 ANALYZE after the reorganization.</dd>
+<dt><tt class="docutils literal"><span class="pre">-k</span></tt>, <tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt></dt>
+<dd>Skip the superuser checks in the client.  This setting is useful for using
+pg_repack on platforms that support running it as non-superusers.</dd>
+<dt><tt class="docutils literal"><span class="pre">-C</span></tt>, <tt class="docutils literal"><span class="pre">--exclude-extension</span></tt></dt>
+<dd>Skip tables that belong to the specified extension(s). Some extensions
+may heavily depend on such tables at planning time etc.</dd>
+<dt><tt class="docutils literal"><span class="pre">--switch-threshold</span></tt></dt>
+<dd>Switch tables when that many tuples are left in log table.
+This setting can be used to avoid the inability to catchup with write-heavy tables.</dd>
 </dl>
 </div>
 <div class="section" id="connection-options">
 <h3>Connection Options</h3>
 <p>Options to connect to servers. You cannot use <tt class="docutils literal"><span class="pre">--all</span></tt> and <tt class="docutils literal"><span class="pre">--dbname</span></tt> or
-<tt class="docutils literal"><span class="pre">--table</span></tt> together.</p>
+<tt class="docutils literal"><span class="pre">--table</span></tt> or <tt class="docutils literal"><span class="pre">--parent-table</span></tt> together.</p>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">-a</span></tt>, <tt class="docutils literal"><span class="pre">--all</span></tt></dt>
 <dd>Reorganize all databases.</dd>
@@ -805,7 +843,7 @@ wrong database being addressed. Check the program directory and the
 database; if they are what expected you may need to repeat pg_repack
 installation.</p>
 </dd>
-<dt>ERROR: extension 'pg_repack V1' required, found extension 'pg_repack V2'</dt>
+<dt>ERROR: extension 'pg_repack V1' required, found 'pg_repack V2'</dt>
 <dd><p class="first">The SQL extension found in the database does not match the version
 required by the pg_repack program.</p>
 <p class="last">You should drop the extension from the database and reload it as described
@@ -820,39 +858,26 @@ defined.</p>
 <dd><p class="first">The target table doesn't have columns specified by <tt class="docutils literal"><span class="pre">--order-by</span></tt> option.</p>
 <p class="last">Specify existing columns.</p>
 </dd>
-<dt>WARNING: the table &quot;tbl&quot; already has a trigger called z_repack_trigger</dt>
+<dt>WARNING: the table &quot;tbl&quot; already has a trigger called repack_trigger</dt>
 <dd><p class="first">The trigger was probably installed during a previous attempt to run
 pg_repack on the table which was interrupted and for some reason failed
 to clean up the temporary objects.</p>
 <p class="last">You can remove all the temporary objects by dropping and re-creating the
 extension: see the <a class="reference internal" href="#installation">installation</a> section for the details.</p>
 </dd>
-<dt>WARNING: trigger &quot;trg&quot; conflicting on table &quot;tbl&quot;</dt>
-<dd><p class="first">The target table has a trigger whose name follows <tt class="docutils literal">z_repack_trigger</tt>
-in alphabetical order.</p>
-<p>The <tt class="docutils literal">z_repack_trigger</tt> should be the last BEFORE trigger to fire.
-Please rename your trigger so that it sorts alphabetically before
-pg_repack's one; you can use:</p>
-<pre class="last literal-block">
-ALTER TRIGGER zzz_my_trigger ON sometable RENAME TO yyy_my_trigger;
-</pre>
-</dd>
-<dt>ERROR: Another pg_repack command may be running on the table. Please try again</dt>
-<dd><blockquote class="first">
-later.</blockquote>
-<p class="last">There is a chance of deadlock when two concurrent pg_repack commands are run
-on the same table. So, try to run the command after some time.</p>
-</dd>
-</dl>
-<p>WARNING: Cannot create index  &quot;schema&quot;.&quot;index_xxxxx&quot;, already exists
-DETAIL: An invalid index may have been left behind by a previous pg_repack on
-the table which was interrupted. Please use DROP INDEX &quot;schema&quot;.&quot;index_xxxxx&quot;
-to remove this index and try again.</p>
-<blockquote>
-A temporary index apparently created by pg_repack has been left behind, and
+<dt>ERROR: Another pg_repack command may be running on the table. Please try again later.</dt>
+<dd>There is a chance of deadlock when two concurrent pg_repack commands are
+run on the same table. So, try to run the command after some time.</dd>
+<dt>WARNING: Cannot create index  &quot;schema&quot;.&quot;index_xxxxx&quot;, already exists</dt>
+<dd><p class="first">DETAIL: An invalid index may have been left behind by a previous pg_repack
+on the table which was interrupted. Please use DROP INDEX
+&quot;schema&quot;.&quot;index_xxxxx&quot; to remove this index and try again.</p>
+<p class="last">A temporary index apparently created by pg_repack has been left behind, and
 we do not want to risk dropping this index ourselves. If the index was in
 fact created by an old pg_repack job which didn't get cleaned up, you
-should just use DROP INDEX and try the repack command again.</blockquote>
+should just use DROP INDEX and try the repack command again.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="restrictions">
 <h2>Restrictions</h2>
@@ -863,7 +888,7 @@ should just use DROP INDEX and try the repack command again.</blockquote>
 </div>
 <div class="section" id="gist-indexes">
 <h3>GiST indexes</h3>
-<p>pg_repack cannot reorganize tables using GiST indexes.</p>
+<p>pg_repack cannot cluster tables by GiST indexes.</p>
 </div>
 <div class="section" id="ddl-commands">
 <h3>DDL commands</h3>
@@ -879,18 +904,137 @@ earlier versions which could result in data corruption.</p>
 </div>
 <div class="section" id="details">
 <h2>Details</h2>
-<p>To perform full table repacks, pg_repack creates a work table in the &quot;repack&quot;
-schema and sorts the rows in this table. Then, it updates the system catalogs
-directly to swap the work table and the original one.</p>
-<p>To perform index only repacks, pg_repack creates its work index on the target
-table and then updates the system catalogs directly to swap the work index and
-the original index.</p>
+<div class="section" id="full-table-repacks">
+<h3>Full Table Repacks</h3>
+<p>To perform a full-table repack, pg_repack will:</p>
+<ol class="arabic simple">
+<li>create a log table to record changes made to the original table</li>
+<li>add a trigger onto the original table, logging INSERTs, UPDATEs and DELETEs into our log table</li>
+<li>create a new table containing all the rows in the old table</li>
+<li>build indexes on this new table</li>
+<li>apply all changes which have accrued in the log table to the new table</li>
+<li>swap the tables, including indexes and toast tables, using the system catalogs</li>
+<li>drop the original table</li>
+</ol>
+<p>pg_repack will only hold an ACCESS EXCLUSIVE lock for a short period during
+initial setup (steps 1 and 2 above) and during the final swap-and-drop phase
+(steps 6 and 7). For the rest of its time, pg_repack only needs
+to hold an ACCESS SHARE lock on the original table, meaning INSERTs, UPDATEs,
+and DELETEs may proceed as usual.</p>
+</div>
+<div class="section" id="index-only-repacks">
+<h3>Index Only Repacks</h3>
+<p>To perform an index-only repack, pg_repack will:</p>
+<ol class="arabic simple">
+<li>create new indexes on the table using CONCURRENTLY matching the definitions of the old indexes</li>
+<li>swap out the old for the new indexes in the catalogs</li>
+<li>drop the old indexes</li>
+</ol>
+<p>Creating indexes concurrently comes with a few caveats, please see <a class="reference external" href="http://www.postgresql.org/docs/current/static/sql-createindex.html#SQL-CREATEINDEX-CONCURRENTLY">the documentation</a> for details.</p>
+<blockquote>
+</blockquote>
+</div>
 </div>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.5.0<ul>
+<li>Added support for PostgreSQL 16</li>
+<li>Fix possible SQL injection (issue #368)</li>
+<li>Support longer password length (issue #357)</li>
+<li>Fixed infinite loop on empty password (issue #354)</li>
+<li>Added <tt class="docutils literal"><span class="pre">--switch-threshold</span></tt> option (issue #347)</li>
+<li>Fixed crash in <tt class="docutils literal">get_order_by()</tt> using invalid relations (issue #321)</li>
+<li>Added support for tables that have been previously rewritten with <cite>VACUUM FULL</cite> and use storage=plain for all columns (issue #313)</li>
+<li>More careful locks acquisition (issue #298)</li>
+</ul>
+</li>
+<li>pg_repack 1.4.8<ul>
+<li>Added support for PostgreSQL 15</li>
+<li>Fixed --parent-table on declarative partitioned tables (issue #288)</li>
+<li>Removed connection info from error log (issue #285)</li>
+</ul>
+</li>
+<li>pg_repack 1.4.7<ul>
+<li>Added support for PostgreSQL 14</li>
+</ul>
+</li>
+<li>pg_repack 1.4.6<ul>
+<li>Added support for PostgreSQL 13</li>
+<li>Dropped support for PostgreSQL before 9.4</li>
+</ul>
+</li>
+<li>pg_repack 1.4.5<ul>
+<li>Added support for PostgreSQL 12</li>
+<li>Fixed parallel processing for indexes with operators from public schema</li>
+</ul>
+</li>
+<li>pg_repack 1.4.4<ul>
+<li>Added support for PostgreSQL 11 (issue #181)</li>
+<li>Remove duplicate password prompt (issue #184)</li>
+</ul>
+</li>
+<li>pg_repack 1.4.3<ul>
+<li>Fixed possible CVE-2018-1058 attack paths (issue #168)</li>
+<li>Fixed &quot;unexpected index definition&quot; after CVE-2018-1058 changes in
+PostgreSQL (issue #169)</li>
+<li>Fixed build with recent Ubuntu packages (issue #179)</li>
+</ul>
+</li>
+<li>pg_repack 1.4.2<ul>
+<li>added PostgreSQL 10 support (issue #120)</li>
+<li>fixed error DROP INDEX CONCURRENTLY cannot run inside a transaction block
+(issue #129)</li>
+</ul>
+</li>
+<li>pg_repack 1.4.1<ul>
+<li>fixed broken <tt class="docutils literal"><span class="pre">--order-by</span></tt> option (issue #138)</li>
+</ul>
+</li>
+<li>pg_repack 1.4<ul>
+<li>added support for PostgreSQL 9.6, dropped support for versions before 9.1</li>
+<li>use <tt class="docutils literal">AFTER</tt> trigger to solve concurrency problems with <tt class="docutils literal">INSERT
+CONFLICT</tt> (issue #106)</li>
+<li>added <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> option (issue #108)</li>
+<li>added <tt class="docutils literal"><span class="pre">--no-superuser-check</span></tt> option (issue #114)</li>
+<li>added <tt class="docutils literal"><span class="pre">--exclude-extension</span></tt> option (#97)</li>
+<li>added <tt class="docutils literal"><span class="pre">--parent-table</span></tt> option (#117)</li>
+<li>restore TOAST storage parameters on repacked tables (issue #10)</li>
+<li>restore columns storage types in repacked tables (issue #94)</li>
+</ul>
+</li>
+<li>pg_repack 1.3.4<ul>
+<li>grab exclusive lock before dropping original table (issue #81)</li>
+<li>do not attempt to repack unlogged tables (issue #71)</li>
+</ul>
+</li>
+<li>pg_repack 1.3.3<ul>
+<li>Added support for PostgreSQL 9.5</li>
+<li>Fixed possible deadlock when pg_repack command is interrupted (issue #55)</li>
+<li>Fixed exit code for when pg_repack is invoked with <tt class="docutils literal"><span class="pre">--help</span></tt> and
+<tt class="docutils literal"><span class="pre">--version</span></tt></li>
+<li>Added Japanese language user manual</li>
+</ul>
+</li>
+<li>pg_repack 1.3.2<ul>
+<li>Fixed to clean up temporary objects when pg_repack command is interrupted.</li>
+<li>Fixed possible crash when pg_repack shared library is loaded alongside
+pg_statsinfo (issue #43).</li>
+</ul>
+</li>
+<li>pg_repack 1.3.1<ul>
+<li>Added support for PostgreSQL 9.4.</li>
+</ul>
+</li>
 <li>pg_repack 1.3<ul>
-<li>Added <tt class="docutils literal"><span class="pre">--dry-run</span></tt> to do a dry run.</li>
+<li>Added <tt class="docutils literal"><span class="pre">--schema</span></tt> to repack only the specified schema (issue #20).</li>
+<li>Added <tt class="docutils literal"><span class="pre">--dry-run</span></tt> to do a dry run (issue #21).</li>
+<li>Fixed advisory locking for &gt;2B OID values (issue #30).</li>
+<li>Avoid possible deadlock when other sessions lock a to-be-repacked
+table (issue #32).</li>
+<li>Performance improvement for performing sql_pop DELETEs many-at-a-time.</li>
+<li>Attempt to avoid pg_repack taking forever when dealing with a
+constant heavy stream of changes to a table.</li>
 </ul>
 </li>
 <li>pg_repack 1.2<ul>

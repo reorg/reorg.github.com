@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.4.8 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.5.0 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,14 +426,15 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-4-8-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.4.8 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-5-0-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.5.0 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="1.1/">1.1</a>
 <a class="reference external" href="1.2/">1.2</a>
 <a class="reference external" href="1.3/">1.3</a>
 <a class="reference external" href="1.4/">1.4</a>
+<a class="reference external" href="1.5/">1.5</a>
 master</p>
 <p>Languages:
 en
@@ -596,7 +597,9 @@ pg_repack [OPTION]... [DBNAME]
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">-C</span>, <span class="option">--exclude-extension</span></kbd></td>
 </tr>
-<tr><td>&nbsp;</td><td>don't repack tables which belong to specific extension</td></tr>
+<tr><td>&nbsp;</td><td>don't repack tables which belong to specific extension
+--error-on-invalid-index  don't repack when invalid index is found
+--switch-threshold        switch tables when that many tuples are left to catchup</td></tr>
 </tbody>
 </table>
 </dd>
@@ -699,13 +702,14 @@ by writing multiple <tt class="docutils literal"><span class="pre">-i</span></tt
 <dd>Repack only the indexes of the specified table(s), which must be specified
 with the <tt class="docutils literal"><span class="pre">--table</span></tt> or <tt class="docutils literal"><span class="pre">--parent-table</span></tt> options.</dd>
 <dt><tt class="docutils literal"><span class="pre">-T</span> SECS</tt>, <tt class="docutils literal"><span class="pre">--wait-timeout=SECS</span></tt></dt>
-<dd>pg_repack needs to take an exclusive lock at the end of the
-reorganization.  This setting controls how many seconds pg_repack will
-wait to acquire this lock. If the lock cannot be taken after this duration
-and <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> option is not specified, pg_repack will forcibly
-cancel the conflicting queries. If you are using PostgreSQL version 8.4
-or newer, pg_repack will fall back to using pg_terminate_backend() to
-disconnect any remaining backends after twice this timeout has passed.
+<dd>pg_repack needs to take one exclusive lock at the beginning as well as one
+exclusive lock at the end of the repacking process. This setting controls
+how many seconds pg_repack will wait to acquire this lock. If the lock
+cannot be taken after this duration and <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt> option is
+not specified, pg_repack will forcibly cancel the conflicting queries.
+If you are using PostgreSQL version 8.4 or newer, pg_repack will fall
+back to using pg_terminate_backend() to disconnect any remaining
+backends after twice this timeout has passed.
 The default is 60 seconds.</dd>
 <dt><tt class="docutils literal"><span class="pre">-D</span></tt>, <tt class="docutils literal"><span class="pre">--no-kill-backend</span></tt></dt>
 <dd>Skip to repack table if the lock cannot be taken for duration specified
@@ -720,6 +724,9 @@ pg_repack on platforms that support running it as non-superusers.</dd>
 <dt><tt class="docutils literal"><span class="pre">-C</span></tt>, <tt class="docutils literal"><span class="pre">--exclude-extension</span></tt></dt>
 <dd>Skip tables that belong to the specified extension(s). Some extensions
 may heavily depend on such tables at planning time etc.</dd>
+<dt><tt class="docutils literal"><span class="pre">--switch-threshold</span></tt></dt>
+<dd>Switch tables when that many tuples are left in log table.
+This setting can be used to avoid the inability to catchup with write-heavy tables.</dd>
 </dl>
 </div>
 <div class="section" id="connection-options">
@@ -931,6 +938,17 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.5.0<ul>
+<li>Added support for PostgreSQL 16</li>
+<li>Fix possible SQL injection (issue #368)</li>
+<li>Support longer password length (issue #357)</li>
+<li>Fixed infinite loop on empty password (issue #354)</li>
+<li>Added <tt class="docutils literal"><span class="pre">--switch-threshold</span></tt> option (issue #347)</li>
+<li>Fixed crash in <tt class="docutils literal">get_order_by()</tt> using invalid relations (issue #321)</li>
+<li>Added support for tables that have been previously rewritten with <cite>VACUUM FULL</cite> and use storage=plain for all columns (issue #313)</li>
+<li>More careful locks acquisition (issue #298)</li>
+</ul>
+</li>
 <li>pg_repack 1.4.8<ul>
 <li>Added support for PostgreSQL 15</li>
 <li>Fixed --parent-table on declarative partitioned tables (issue #288)</li>
