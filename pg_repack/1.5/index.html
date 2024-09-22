@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.5.0 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.5.1 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-5-0-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.5.0 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-5-1-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.5.1 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="../1.1/">1.1</a>
@@ -480,7 +480,7 @@ NOT NULL column.</li>
 <h2>Requirements</h2>
 <dl class="docutils">
 <dt>PostgreSQL versions</dt>
-<dd><p class="first">PostgreSQL 9.5, 9.6, 10, 11, 12, 13, 14, 15, 16.</p>
+<dd><p class="first">PostgreSQL 9.5, 9.6, 10, 11, 12, 13, 14, 15, 16, 17.</p>
 <p class="last">PostgreSQL 9.4 and before it are not supported.</p>
 </dd>
 <dt>Disks</dt>
@@ -601,6 +601,7 @@ pg_repack [OPTION]... [DBNAME]
 </tr>
 <tr><td>&nbsp;</td><td>don't repack tables which belong to specific extension
 --error-on-invalid-index  don't repack when invalid index is found
+--apply-count             number of tuples to apply in one trasaction during replay
 --switch-threshold        switch tables when that many tuples are left to catchup</td></tr>
 </tbody>
 </table>
@@ -940,6 +941,19 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.5.1<ul>
+<li>Added support for PostgreSQL 17</li>
+<li>Fix wrong OID format type in repack_trigger (issue #380)</li>
+<li>Fix check of NOT NULL by repack.primary_keys (issue #282)</li>
+<li>Fixed processing of tablespace names requiring quoted identifiers (issue #386)</li>
+<li>Replace <tt class="docutils literal">PQconnectdb()</tt> by <tt class="docutils literal">PQconnectdbParams()</tt> (issue #382)</li>
+<li>Added <tt class="docutils literal"><span class="pre">--apply-count</span></tt> option (issue #392)</li>
+<li>Do not include a declaratively partitioned table with option <tt class="docutils literal"><span class="pre">--only-indexes</span></tt> (issue #389)</li>
+<li>Fix possible two vacuums concurrently processing the same relfilenode (issue #399)</li>
+<li>Use savepoints when retrying to take AccessShareLock (issue #383)</li>
+<li>Fix swap of relfrozenxid, relfrozenxid and relallvisible (issue #377, #157)</li>
+</ul>
+</li>
 <li>pg_repack 1.5.0<ul>
 <li>Added support for PostgreSQL 16</li>
 <li>Fix possible SQL injection (issue #368)</li>
