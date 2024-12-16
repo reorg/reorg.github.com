@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.5.1 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.5.2 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-5-1-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.5.1 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-5-2-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.5.2 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="1.1/">1.1</a>
@@ -472,7 +472,8 @@ CLUSTER directly.</p>
 </ul>
 <p>NOTICE:</p>
 <ul class="simple">
-<li>Only superusers can use the utility.</li>
+<li>Only superusers or owners of tables and indexes can use the utility. To run
+pg_repack as an owner you need to use the option <cite>--no-superuser-check</cite>.</li>
 <li>Target table must have a PRIMARY KEY, or at least a UNIQUE total index on a
 NOT NULL column.</li>
 </ul>
@@ -600,9 +601,10 @@ pg_repack [OPTION]... [DBNAME]
 <kbd><span class="option">-C</span>, <span class="option">--exclude-extension</span></kbd></td>
 </tr>
 <tr><td>&nbsp;</td><td>don't repack tables which belong to specific extension
---error-on-invalid-index  don't repack when invalid index is found
---apply-count             number of tuples to apply in one trasaction during replay
---switch-threshold        switch tables when that many tuples are left to catchup</td></tr>
+--no-error-on-invalid-index    repack even though invalid index is found
+--error-on-invalid-index       don't repack when invalid index is found, deprecated, as this is the default behavior now
+--apply-count                  number of tuples to apply in one trasaction during replay
+--switch-threshold             switch tables when that many tuples are left to catchup</td></tr>
 </tbody>
 </table>
 </dd>
@@ -941,6 +943,11 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.5.2<ul>
+<li>Allow to run pg_repack by non-superusers (issue/pull request #431)</li>
+<li>Make <tt class="docutils literal"><span class="pre">--error-on-invalid-index</span></tt> the default behavior (issue #422)</li>
+</ul>
+</li>
 <li>pg_repack 1.5.1<ul>
 <li>Added support for PostgreSQL 17</li>
 <li>Fix wrong OID format type in repack_trigger (issue #380)</li>
