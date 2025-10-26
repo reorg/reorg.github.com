@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
-<title>pg_repack 1.5.2 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
+<title>pg_repack 1.5.3 -- Reorganize tables in PostgreSQL databases with minimal locks</title>
 <style type="text/css">
 
 ﻿body {
@@ -426,8 +426,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pg-repack-1-5-2-reorganize-tables-in-postgresql-databases-with-minimal-locks">
-<h1 class="title">pg_repack 1.5.2 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
+<div class="document" id="pg-repack-1-5-3-reorganize-tables-in-postgresql-databases-with-minimal-locks">
+<h1 class="title">pg_repack 1.5.3 -- Reorganize tables in PostgreSQL databases with minimal locks</h1>
 
 <p>Versions:
 <a class="reference external" href="../1.1/">1.1</a>
@@ -481,7 +481,7 @@ NOT NULL column.</li>
 <h2>Requirements</h2>
 <dl class="docutils">
 <dt>PostgreSQL versions</dt>
-<dd><p class="first">PostgreSQL 9.5, 9.6, 10, 11, 12, 13, 14, 15, 16, 17.</p>
+<dd><p class="first">PostgreSQL 9.5, 9.6, 10, 11, 12, 13, 14, 15, 16, 17, 18.</p>
 <p class="last">PostgreSQL 9.4 and before it are not supported.</p>
 </dd>
 <dt>Disks</dt>
@@ -897,10 +897,9 @@ should just use DROP INDEX and try the repack command again.</p>
 </div>
 <div class="section" id="ddl-commands">
 <h3>DDL commands</h3>
-<p>You will not be able to perform DDL commands of the target table(s) <strong>except</strong>
-VACUUM or ANALYZE while pg_repack is working. pg_repack will hold an
-ACCESS SHARE lock on the target table during a full-table repack, to enforce
-this restriction.</p>
+<p>You will not be able to perform DDL commands of the target table(s) while
+pg_repack is working. pg_repack will hold an SHARE UPDATE EXCLUSIVE lock on the
+target table during a full-table repack, to enforce this restriction.</p>
 <p>If you are using version 1.1.8 or earlier, you must not attempt to perform any
 DDL commands on the target table(s) while pg_repack is running. In many cases
 pg_repack would fail and rollback correctly, but there were some cases in these
@@ -924,8 +923,8 @@ earlier versions which could result in data corruption.</p>
 <p>pg_repack will only hold an ACCESS EXCLUSIVE lock for a short period during
 initial setup (steps 1 and 2 above) and during the final swap-and-drop phase
 (steps 6 and 7). For the rest of its time, pg_repack only needs
-to hold an ACCESS SHARE lock on the original table, meaning INSERTs, UPDATEs,
-and DELETEs may proceed as usual.</p>
+to hold an SHARE UPDATE EXCLUSIVE lock on the original table, meaning INSERTs,
+UPDATEs, and DELETEs may proceed as usual.</p>
 </div>
 <div class="section" id="index-only-repacks">
 <h3>Index Only Repacks</h3>
@@ -943,6 +942,10 @@ and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
+<li>pg_repack 1.5.3
+* Cleanup temporary indexes on error when using --only-indexes to avoid artefacts after failures (issue #437, pull request #440)
+* Acquire SHARE UPDATE EXCLUSIVE lock on the target table during a full-table repack instead of ACCESS SHARE (issue #420, pull request #452)
+* Fix subtransactions cache overflow (issue #457, pull request #460)</li>
 <li>pg_repack 1.5.2<ul>
 <li>Allow to run pg_repack by non-superusers (issue/pull request #431)</li>
 <li>Make <tt class="docutils literal"><span class="pre">--error-on-invalid-index</span></tt> the default behavior (issue #422)</li>
