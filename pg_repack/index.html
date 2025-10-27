@@ -942,10 +942,12 @@ UPDATEs, and DELETEs may proceed as usual.</p>
 <div class="section" id="releases">
 <h2>Releases</h2>
 <ul class="simple">
-<li>pg_repack 1.5.3
-* Cleanup temporary indexes on error when using --only-indexes to avoid artefacts after failures (issue #437, pull request #440)
-* Acquire SHARE UPDATE EXCLUSIVE lock on the target table during a full-table repack instead of ACCESS SHARE (issue #420, pull request #452)
-* Fix subtransactions cache overflow (issue #457, pull request #460)</li>
+<li>pg_repack 1.5.3<ul>
+<li>Cleanup temporary indexes on error when using --only-indexes to avoid artefacts after failures (issue #437, pull request #440)</li>
+<li>Acquire SHARE UPDATE EXCLUSIVE lock on the target table during a full-table repack instead of ACCESS SHARE (issue #420, pull request #452)</li>
+<li>Fix subtransactions cache overflow (issue #457, pull request #460)</li>
+</ul>
+</li>
 <li>pg_repack 1.5.2<ul>
 <li>Allow to run pg_repack by non-superusers (issue/pull request #431)</li>
 <li>Make <tt class="docutils literal"><span class="pre">--error-on-invalid-index</span></tt> the default behavior (issue #422)</li>
